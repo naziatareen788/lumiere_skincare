@@ -1,7 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>Welcome to Lumière Skincare</h2>
-<p>Coming soon...</p>
+<section class="hero">
+    <p class="hero-label">Skincare Rooted in Science</p>
+    <h1 class="hero-title">Your Skin Deserves The Best Care</h1>
+    <p class="hero-text">Discover personalised skincare solutions crafted for every skin type.</p>
+    <a href="/quiz" class="btn-dark">Take the Skin Quiz</a>
+</section>
+
+<section class="categories">
+    <h2>Shop by Category</h2>
+    <div class="category-grid">
+        <div class="category-card">Cleansers</div>
+        <div class="category-card">Toners</div>
+        <div class="category-card">Sunscreens</div>
+        <div class="category-card">Treatments</div>
+    </div>
+</section>
 
 {% endblock %}

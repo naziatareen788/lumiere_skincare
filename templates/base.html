@@ -2,16 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lumière Skincare</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-    <nav>
-        <h1>Lumière</h1>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-logo">Lumière</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/about">About Us</a>
+            <a href="/products">Shop</a>
+            <a href="/quiz">Skin Quiz</a>
+            <a href="/faq">FAQ</a>
+        </div>
+        <div class="nav-icons">
+            <a href="#">🔍</a>
+            <a href="/cart">🛒</a>
+            <a href="/login">👤</a>
+        </div>
     </nav>
 
+    <!-- PAGE CONTENT -->
     {% block content %}
     {% endblock %}
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-logo">Lumière</div>
+        <p>Skincare rooted in science, crafted with care.</p>
+        <p>© 2026 Lumière Skincare. All rights reserved.</p>
+    </footer>
 
 </body>
 </html>
