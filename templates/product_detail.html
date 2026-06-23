@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="product-detail">
+
+    <div class="back-btn">
+        <a href="/products">← Back to Products</a>
+    </div>
+
+    <div class="product-detail-grid">
+
+        <div class="product-gallery">
+            <div class="main-image">Product Image</div>
+        </div>
+
+        <div class="product-info-detail">
+            <div class="prod-skin">Sensitive Skin</div>
+            <h1 class="product-detail-name">Black Rice Cleanser</h1>
+            <div class="product-detail-price">PKR 2,500</div>
+
+            <div class="product-tabs">
+                <button class="tab-btn active">Benefits</button>
+                <button class="tab-btn">Ingredients</button>
+                <button class="tab-btn">How to Use</button>
+            </div>
+
+            <div class="tab-content">
+                <ul class="benefits-list">
+                    <li>Gentle cleansing for sensitive skin</li>
+                    <li>Soothes and hydrates</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

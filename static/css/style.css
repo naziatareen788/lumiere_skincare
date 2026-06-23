@@ -115,3 +115,69 @@ body {
     font-weight: bold;
     color: #2d4a2d;
 }
+
+/* ===== PRODUCT DETAIL ===== */
+.product-detail {
+    padding: 30px 40px 60px;
+}
+
+.back-btn a {
+    text-decoration: none;
+    color: #4a6a40;
+    font-size: 13px;
+}
+
+.product-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 24px;
+}
+
+.main-image {
+    background: #f0f5ee;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+}
+
+.product-detail-name {
+    font-size: 26px;
+    margin: 12px 0;
+}
+
+.product-detail-price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2d4a2d;
+    margin-bottom: 20px;
+}
+
+.product-tabs {
+    display: flex;
+    gap: 16px;
+    border-bottom: 1px solid #d8e8d0;
+    margin-bottom: 16px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 8px 0;
+    font-size: 13px;
+    cursor: pointer;
+    color: #888;
+}
+
+.tab-btn.active {
+    color: #2d4a2d;
+    font-weight: bold;
+    border-bottom: 2px solid #2d4a2d;
+}
+
+.benefits-list {
+    padding-left: 18px;
+    line-height: 1.8;
+}
