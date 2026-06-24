@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="auth-page">
+    <div class="auth-box">
+        <h1 class="auth-title">Create Account</h1>
+        <p class="auth-sub">Join Lumière for personalised skincare</p>
+
+        <form>
+            <div class="contact-field">
+                <label>Full Name</label>
+                <input type="text" placeholder="Enter your name">
+            </div>
+            <div class="contact-field">
+                <label>Email Address</label>
+                <input type="email" placeholder="your@email.com">
+            </div>
+            <div class="contact-field">
+                <label>Password</label>
+                <input type="password" placeholder="Create a password">
+            </div>
+            <div class="contact-field">
+                <label>Confirm Password</label>
+                <input type="password" placeholder="Re-enter password">
+            </div>
+            <button type="submit" class="btn-dark" style="width:100%;">Create Account</button>
+        </form>
+
+        <p class="auth-switch">Already have an account? <a href="/login">Sign in</a></p>
+    </div>
+</section>
+
+{% endblock %}

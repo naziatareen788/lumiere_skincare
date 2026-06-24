@@ -181,3 +181,62 @@ body {
     padding-left: 18px;
     line-height: 1.8;
 }
+
+/* ===== AUTH PAGES ===== */
+.auth-page {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    background: #f8fbf5;
+}
+
+.auth-box {
+    background: #fff;
+    border: 1px solid #d8e8d0;
+    padding: 40px;
+    max-width: 400px;
+    width: 100%;
+}
+
+.auth-title {
+    font-size: 26px;
+    text-align: center;
+}
+
+.auth-sub {
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 24px;
+}
+
+.contact-field {
+    margin-bottom: 16px;
+}
+
+.contact-field label {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 6px;
+    color: #4a6a40;
+}
+
+.contact-field input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d8e8d0;
+    font-size: 14px;
+}
+
+.auth-switch {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 13px;
+}
+
+.auth-switch a {
+    color: #2d4a2d;
+    font-weight: bold;
+}
