@@ -240,3 +240,9 @@ body {
     color: #2d4a2d;
     font-weight: bold;
 }
+
+  .form-alert {
+    color = '#c0392b';
+    font-size = '12px';
+    margin-top = '4px';
+  }

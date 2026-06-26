@@ -3,81 +3,43 @@
 
 <section class="auth-page">
     <div class="auth-box">
-        <h1 class="auth-title">Create Account</h1>
-        <p class="auth-sub">Join Lumière for personalised skincare</p>
+        <div class="auth-header">
+            <h1 class="auth-title">Create Account</h1>
+            <p class="auth-sub">Join Lumière and discover your perfect skincare routine</p>
+        </div>
 
-        <form id="registerForm">
-            <div class="contact-field">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-msg {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/register">
+            <div class="auth-field">
                 <label>Full Name</label>
-                <input type="text" id="full_name" placeholder="Enter your name">
+                <input type="text" name="full_name" placeholder="Enter your full name" required>
             </div>
-            <div class="contact-field">
+            <div class="auth-field">
                 <label>Email Address</label>
-                <input type="email" id="reg_email" placeholder="your@email.com">
+                <input type="email" name="email" placeholder="your@email.com" required>
             </div>
-            <div class="contact-field">
+            <div class="auth-field">
                 <label>Password</label>
-                <input type="password" id="reg_password" placeholder="Create a password">
+                <input type="password" name="password" placeholder="Min 6 characters" required>
             </div>
-            <div class="contact-field">
+            <div class="auth-field">
                 <label>Confirm Password</label>
-                <input type="password" id="confirm_password" placeholder="Re-enter password">
+                <input type="password" name="confirm_password" placeholder="Repeat your password" required>
             </div>
-            <button type="button" onclick="validateRegister()" class="btn-dark" style="width:100%;">Create Account</button>
+            <button type="submit" class="btn-dark auth-btn">Create Account</button>
         </form>
 
-        <p class="auth-switch">Already have an account? <a href="/login">Sign in</a></p>
+        <div class="auth-footer">
+            <p>Already have an account? <a href="/login">Sign in</a></p>
+        </div>
     </div>
 </section>
-
-<script>
-function validateRegister() {
-    const fields = ['full_name', 'reg_email', 'reg_password', 'confirm_password'];
-    let valid = true;
-
-    fields.forEach(function(id) {
-        const field = document.getElementById(id);
-        const existing = field.parentElement.querySelector('.form-alert');
-        if (existing) existing.remove();
-        field.style.borderColor = '#d8e8d0';
-    });
-
-    fields.forEach(function(id) {
-        const field = document.getElementById(id);
-        if (!field.value.trim()) {
-            showError(field, 'This field is required!');
-            valid = false;
-        }
-    });
-
-    const password = document.getElementById('reg_password');
-    const confirm = document.getElementById('confirm_password');
-
-    if (password.value && password.value.length < 6) {
-        showError(password, 'Password must be at least 6 characters!');
-        valid = false;
-    }
-
-    if (password.value && confirm.value && password.value !== confirm.value) {
-        showError(confirm, 'Passwords do not match!');
-        valid = false;
-    }
-
-    if (valid) {
-        alert('Registration form is valid! (Backend not connected yet)');
-    }
-}
-
-function showError(field, message) {
-    const alert = document.createElement('div');
-    alert.className = 'form-alert';
-    alert.style.color = '#c0392b';
-    alert.style.fontSize = '12px';
-    alert.style.marginTop = '4px';
-    alert.textContent = message;
-    field.parentElement.appendChild(alert);
-    field.style.borderColor = '#c0392b';
-}
-</script>
 
 {% endblock %}
