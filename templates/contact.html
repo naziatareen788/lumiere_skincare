@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="page-header">
+    <p class="sec-label">Get In Touch</p>
+    <h1 class="page-title">Contact Us</h1>
+</section>
+
+<section class="contact-page">
+    <form id="contactForm">
+        <div class="auth-field">
+            <label>Full Name</label>
+            <input type="text" name="name" placeholder="Your name">
+        </div>
+        <div class="auth-field">
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="your@email.com">
+        </div>
+        <div class="auth-field">
+            <label>Subject</label>
+            <input type="text" name="subject" placeholder="How can we help?">
+        </div>
+        <div class="auth-field">
+            <label>Message</label>
+            <textarea name="message" rows="5" placeholder="Write your message here..."></textarea>
+        </div>
+        <button type="submit" class="btn-dark auth-btn">Send Message</button>
+    </form>
+</section>
+
+{% endblock %}

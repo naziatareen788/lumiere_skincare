@@ -200,49 +200,118 @@ body {
     width: 100%;
 }
 
-.auth-title {
-    font-size: 26px;
+.auth-header {
     text-align: center;
-}
-
-.auth-sub {
-    text-align: center;
-    color: #888;
-    font-size: 13px;
     margin-bottom: 24px;
 }
 
-.contact-field {
+.auth-title {
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+.auth-sub {
+    color: #888;
+    font-size: 13px;
+}
+
+.auth-field {
     margin-bottom: 16px;
 }
 
-.contact-field label {
+.auth-field label {
     display: block;
     font-size: 12px;
     margin-bottom: 6px;
     color: #4a6a40;
 }
 
-.contact-field input {
+.auth-field input {
     width: 100%;
     padding: 12px;
     border: 1px solid #d8e8d0;
     font-size: 14px;
+    box-sizing: border-box;
 }
 
-.auth-switch {
+.auth-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.auth-footer {
     text-align: center;
     margin-top: 16px;
     font-size: 13px;
 }
 
-.auth-switch a {
+.auth-footer a {
     color: #2d4a2d;
     font-weight: bold;
 }
 
-  .form-alert {
-    color = '#c0392b';
-    font-size = '12px';
-    margin-top = '4px';
-  }
+.form-alert {
+    color: #c0392b;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* ===== ABOUT PAGE ===== */
+.about-page {
+    padding: 30px 40px 60px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.about-content h2 {
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.about-content p {
+    line-height: 1.8;
+    color: #5a6a58;
+    margin-bottom: 16px;
+}
+
+/* ===== FAQ PAGE ===== */
+.faq-page {
+    padding: 30px 40px 60px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    border-bottom: 1px solid #d8e8d0;
+    padding: 20px 0;
+}
+
+.faq-question {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.faq-answer {
+    color: #5a6a58;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* ===== CONTACT PAGE ===== */
+.contact-page {
+    padding: 30px 40px 60px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.contact-page textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d8e8d0;
+    font-size: 14px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
