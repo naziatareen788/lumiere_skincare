@@ -1,3 +1,14 @@
+// ===== SPLASH SCREEN =====
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        var splash = document.getElementById('splash');
+        if (splash) {
+            splash.classList.add('hide');
+        }
+    }, 2500);
+});
+
+
 // ===== LOGIN VALIDATION =====
 const loginForm = document.querySelector('form[action="/login"]');
 if (loginForm) {
