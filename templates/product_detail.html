@@ -3,36 +3,90 @@
 
 <section class="product-detail">
 
+     <!-- BACK BUTTON -->
     <div class="back-btn">
         <a href="/products">← Back to Products</a>
     </div>
 
     <div class="product-detail-grid">
 
+        <!-- LEFT — IMAGE GALLERY -->
         <div class="product-gallery">
-            <div class="main-image">Product Image</div>
+            <div class="main-image">
+                <img src="{{ url_for('static', filename='images/' + product['images'][0]) }}"
+                     alt="{{ product['name'] }}" id="mainImg">
+            </div>
+            {% if product['images']|length > 1 %}
+            <div class="thumbnail-row">
+                {% for img in product['images'] %}
+                <div class="thumbnail {% if loop.first %}active{% endif %}"
+                     onclick="changeImage('{{ img }}', this)">
+                    <img src="{{ url_for('static', filename='images/' + img) }}"
+                         alt="{{ product['name'] }}">
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
 
-        <div class="product-info-detail">
-            <div class="prod-skin">Sensitive Skin</div>
-            <h1 class="product-detail-name">Black Rice Cleanser</h1>
-            <div class="product-detail-price">PKR 2,500</div>
+        <!-- RIGHT — PRODUCT INFO -->
+         <div class="product-info-detail">
+            <div class="prod-skin">{{ product['skin_type'] }}</div>
+            <h1 class="product-detail-name">{{ product['name'] }}</h1>
+            <div class="product-detail-category">{{ product['category'] }}</div>
+            <div class="product-detail-price">{{ product['price'] }}</div>
 
-            <div class="product-tabs">
-                <button class="tab-btn active">Benefits</button>
-                <button class="tab-btn">Ingredients</button>
-                <button class="tab-btn">How to Use</button>
+            <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">4.8 (120 reviews)</span>
             </div>
 
-            <div class="tab-content">
+            <form method="POST" action="/add-to-cart">
+                <input type="hidden" name="product_id" value="{{ request.path.split('/')[-1] }}">
+                <div class="product-actions">
+                    <div class="quantity-selector">
+                        <button type="button" onclick="changeQty(-1)">−</button>
+                        <span id="qty">1</span>
+                        <button type="button" onclick="changeQty(1)">+</button>
+                    </div>
+                    <button type="submit" class="btn-dark add-to-cart-btn">ADD TO CART</button>
+                </div>
+            </form>
+
+            <!-- TABS -->
+            <div class="product-tabs">
+                <button class="tab-btn active" onclick="showTab('benefits', this)">Benefits</button>
+                <button class="tab-btn" onclick="showTab('ingredients', this)">Ingredients</button>
+                <button class="tab-btn" onclick="showTab('how-to-use', this)">How to Use</button>
+            </div>
+
+            <!-- BENEFITS TAB -->
+            <div class="tab-content active" id="tab-benefits">
                 <ul class="benefits-list">
-                    <li>Gentle cleansing for sensitive skin</li>
-                    <li>Soothes and hydrates</li>
+                    {% for benefit in product['benefits'] %}
+                    <li>{{ benefit }}</li>
+                    {% endfor %}
                 </ul>
+            </div>
+
+            <!-- INGREDIENTS TAB -->
+            <div class="tab-content" id="tab-ingredients">
+                <p class="ingredients-text">{{ product['ingredients'] }}</p>
+            </div>
+
+            <!-- HOW TO USE TAB -->
+            <div class="tab-content" id="tab-how-to-use">
+                <p class="how-to-use-text">{{ product['how_to_use'] }}</p>
             </div>
 
         </div>
     </div>
 </section>
+
+<!-- REVIEWS SECTION -->
+
+
+
+
 
 {% endblock %}

@@ -1,36 +1,204 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<script>
+    var activeCategory = "{{ category }}";
+    var activeSkinType = "{{ skin_type }}";
+    var searchQuery = "{{ search|lower }}";
+    var searchQueryDisplay = "{{ search }}";
+</script>
+
+<!-- PAGE HEADER -->
 <section class="page-header">
     <p class="sec-label">Our Collection</p>
-    <h1 class="page-title">Shop All Products</h1>
+    <h1 class="page-title" id="pageTitle">All Products</h1>
+    <div class="sec-line"></div>
 </section>
 
+<!-- FILTER + PRODUCTS -->
 <section class="products-page">
-    <div class="products-grid">
 
-        <div class="prod-card">
-            <div class="prod-img">Image</div>
-            <div class="prod-skin">Sensitive Skin</div>
-            <div class="prod-name">Black Rice Cleanser</div>
-            <div class="prod-price">PKR 2,500</div>
+<!-- FILTER SIDEBAR -->
+    <div class="filter-sidebar">
+        <h3 class="filter-title">Filter By</h3>
+
+        <div class="filter-group">
+            <h4>Skin Type</h4>
+            <label><input type="checkbox"> Oily Skin</label>
+            <label><input type="checkbox"> Dry Skin</label>
+            <label><input type="checkbox"> Sensitive</label>
+            <label><input type="checkbox"> Combination</label>
         </div>
 
-        <div class="prod-card">
-            <div class="prod-img">Image</div>
-            <div class="prod-skin">Dry Skin</div>
-            <div class="prod-name">Hyaluronic Cleanser</div>
-            <div class="prod-price">PKR 2,500</div>
+        <div class="filter-group">
+            <h4>Category</h4>
+            <label><input type="checkbox"> Cleansers</label>
+            <label><input type="checkbox"> Toners</label>
+            <label><input type="checkbox"> Moisturizers</label>
+            <label><input type="checkbox"> Sunscreens</label>
+            <label><input type="checkbox"> Treatments</label>
         </div>
 
-        <div class="prod-card">
-            <div class="prod-img">Image</div>
-            <div class="prod-skin">Oily Skin</div>
-            <div class="prod-name">Mochi Cleanser</div>
-            <div class="prod-price">PKR 2,500</div>
+        <div class="filter-group">
+            <h4>Price Range</h4>
+            <label><input type="checkbox"> Under PKR 2,000</label>
+            <label><input type="checkbox"> PKR 2,000 - 3,000</label>
+            <label><input type="checkbox"> PKR 3,000 - 4,000</label>
+            <label><input type="checkbox"> Above PKR 4,000</label>
         </div>
-
     </div>
+
+     <!-- PRODUCTS GRID -->
+    <div class="products-main">
+
+        <!-- SORT BAR -->
+        <div class="sort-bar">
+            <p class="products-count">Showing 23 products</p>
+            <select class="sort-select">
+                <option>Sort by: Featured</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+                <option>Newest First</option>
+            </select>
+        </div>
+
+        <!-- PRODUCTS -->
+        <div class="products-grid-full">
+
+            <!-- SENSITIVE SKIN -->
+            <div class="prod-card" data-category="Cleanser" data-skin="Sensitive Skin">
+                <div class="prod-img" onclick="window.location='/product/black-rice-cleanser'">
+                    <img src="{{ url_for('static', filename='images/black-rice-cleanser.jpg.png') }}" alt="Black Rice Cleanser">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-skin">Sensitive Skin</div>
+                    <div class="prod-name" onclick="window.location='/product/black-rice-cleanser'" style="cursor:pointer;">Black Rice Cleanser</div>
+                    <div class="prod-price">PKR 2,500</div>
+                    <form method="POST" action="/add-to-cart">
+                        <input type="hidden" name="product_id" value="black-rice-cleanser">
+                        <button type="submit" class="add-cart">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="prod-card" data-category="Toner" data-skin="Sensitive Skin">
+                <div class="prod-img" onclick="window.location='/product/heartleaf-toner'">
+                    <img src="{{ url_for('static', filename='images/heartleaf-toner.jpg.png') }}" alt="Heartleaf Toner">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-skin">Sensitive Skin</div>
+                    <div class="prod-name" onclick="window.location='/product/heartleaf-toner'" style="cursor:pointer;">Heartleaf Toner</div>
+                    <div class="prod-price">PKR 2,800</div>
+                    <form method="POST" action="/add-to-cart">
+                        <input type="hidden" name="product_id" value="heartleaf-toner">
+                        <button type="submit" class="add-cart">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="prod-card" data-category="Moisturizer" data-skin="Sensitive Skin">
+                <div class="prod-img" onclick="window.location='/product/bamboo-cream'">
+                    <img src="{{ url_for('static', filename='images/bamboo-cream.jpg.png') }}" alt="Bamboo Panthenol Cream">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-skin">Sensitive Skin</div>
+                    <div class="prod-name" onclick="window.location='/product/bamboo-cream'" style="cursor:pointer;">Bamboo Panthenol Cream</div>
+                    <div class="prod-price">PKR 3,200</div>
+                    <form method="POST" action="/add-to-cart">
+                        <input type="hidden" name="product_id" value="bamboo-cream">
+                        <button type="submit" class="add-cart">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+
+             <div class="prod-card" data-category="Sunscreen" data-skin="Sensitive Skin">
+                <div class="prod-img" onclick="window.location='/product/centella-sunscreen'">
+                    <img src="{{ url_for('static', filename='images/centella-sunscreen.jpg.png') }}" alt="Madagascar Centella Sunscreen">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-skin">Sensitive Skin</div>
+                    <div class="prod-name" onclick="window.location='/product/centella-sunscreen'" style="cursor:pointer;">Madagascar Centella Sunscreen</div>
+                    <div class="prod-price">PKR 3,500</div>
+                    <form method="POST" action="/add-to-cart">
+                        <input type="hidden" name="product_id" value="centella-sunscreen">
+                        <button type="submit" class="add-cart">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- DRY SKIN -->
+             <div class="prod-card" data-category="Cleanser" data-skin="Dry Skin">
+                <div class="prod-img" onclick="window.location='/product/hyaluronic-cleanser'">
+                    <img src="{{ url_for('static', filename='images/hyaluronic-cleanser.jpg.png') }}" alt="8 Hyaluronic Foaming Cleanser">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-skin">Dry Skin</div>
+                    <div class="prod-name" onclick="window.location='/product/hyaluronic-cleanser'" style="cursor:pointer;">8 Hyaluronic Foaming Cleanser</div>
+                    <div class="prod-price">PKR 2,500</div>
+                    <form method="POST" action="/add-to-cart">
+                        <input type="hidden" name="product_id" value="hyaluronic-cleanser">
+                        <button type="submit" class="add-cart">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="prod-card" data-category="Toner" data-skin="Dry Skin">
+                <div class="prod-img" onclick="window.location='/product/milky-toner'">
+                    <img src="{{ url_for('static', filename='images/milky-toner.jpg.png') }}" alt="Milky Toner">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-skin">Dry Skin</div>
+                    <div class="prod-name" onclick="window.location='/product/milky-toner'" style="cursor:pointer;">Milky Toner</div>
+                    <div class="prod-price">PKR 2,800</div>
+                    <form method="POST" action="/add-to-cart">
+                        <input type="hidden" name="product_id" value="milky-toner">
+                        <button type="submit" class="add-cart">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="prod-card" data-category="Moisturizer" data-skin="Dry Skin">
+                <div class="prod-img" onclick="window.location='/product/ceramide-cream'">
+                    <img src="{{ url_for('static', filename='images/ceramide-cream.jpg.png') }}" alt="3 Ceramide Panthenol Cream">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-skin">Dry Skin</div>
+                    <div class="prod-name" onclick="window.location='/product/ceramide-cream'" style="cursor:pointer;">3 Ceramide Panthenol Cream</div>
+                    <div class="prod-price">PKR 3,200</div>
+                    <form method="POST" action="/add-to-cart">
+                        <input type="hidden" name="product_id" value="ceramide-cream">
+                        <button type="submit" class="add-cart">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="prod-card" data-category="Sunscreen" data-skin="Dry Skin">
+                <div class="prod-img" onclick="window.location='/product/spf50-sunscreen'">
+                    <img src="{{ url_for('static', filename='images/spf50-sunscreen.jpg.png') }}" alt="SPF 50 Sunscreen">
+                </div>
+                <div class="prod-info">
+                    <div class="prod-skin">Dry Skin</div>
+                    <div class="prod-name" onclick="window.location='/product/spf50-sunscreen'" style="cursor:pointer;">SPF 50 Sunscreen</div>
+                    <div class="prod-price">PKR 3,500</div>
+                    <form method="POST" action="/add-to-cart">
+                        <input type="hidden" name="product_id" value="spf50-sunscreen">
+                        <button type="submit" class="add-cart">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!--OILY SKIN-->
+
+            <!-- COMBINATION SKIN -->
+
+            <!-- TREATMENTS -->
+
+
+
+        </div>  
+    </div>      
+
+
 </section>
 
 {% endblock %}
