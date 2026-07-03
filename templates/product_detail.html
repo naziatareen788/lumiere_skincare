@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
 <section class="product-detail">
@@ -84,9 +85,81 @@
 </section>
 
 <!-- REVIEWS SECTION -->
+<section class="reviews-section">
+    <div class="reviews-header">
+        <h2 class="reviews-title">Customer Reviews</h2>
+        {% if reviews %}
+        <div class="reviews-summary">
+            <div class="reviews-score">
+                {{ "%.1f"|format(reviews|sum(attribute='rating') / reviews|length) }}
+            </div>
+            <div>
+                <div class="stars">★★★★★</div>
+                <div class="reviews-count">Based on {{ reviews|length }} reviews</div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 
+    {% if reviews %}
+    <div class="reviews-grid">
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-stars">
+                {% for i in range(review.rating) %}★{% endfor %}
+                {% for i in range(5 - review.rating) %}☆{% endfor %}
+            </div>
+            <div class="review-text">"{{ review.review_text }}"</div>
+            <div class="review-author">— {{ review.reviewer_name }}</div>
+            <div style="font-size:10px;color:#aaa;margin-top:4px;">
+                {{ review.created_at.strftime('%d %B %Y') }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="padding:32px;text-align:center;color:#888;font-size:13px;">
+        No reviews yet — be the first to review!
+    </div>
+    {% endif %}
 
-
-
+    <!-- WRITE REVIEW -->
+    <div class="write-review">
+        <h3 class="write-review-title">Write a Review</h3>
+        <form method="POST" action="/submit-review">
+            <input type="hidden" name="product_id"
+                value="{{ request.path.split('/')[-1] }}">
+            <div class="contact-field">
+                <label>Your Name *</label>
+                <input type="text" name="reviewer_name" id="reviewer_name"
+    value="{{ session.get('user_name', '') }}"
+    placeholder="Enter your name">
+            </div>
+            <div class="contact-field">
+                <label>Rating *</label>
+                <div class="star-rating">
+                    <input type="radio" name="rating" value="5" id="s5" checked>
+                    <label for="s5">★</label>
+                    <input type="radio" name="rating" value="4" id="s4">
+                    <label for="s4">★</label>
+                    <input type="radio" name="rating" value="3" id="s3">
+                    <label for="s3">★</label>
+                    <input type="radio" name="rating" value="2" id="s2">
+                    <label for="s2">★</label>
+                    <input type="radio" name="rating" value="1" id="s1">
+                    <label for="s1">★</label>
+                </div>
+            </div>
+            <div class="contact-field">
+                <label>Your Review *</label>
+               <textarea name="review_text" id="review_text" rows="4"
+    placeholder="Share your experience with this product..."></textarea>
+            </div>
+            <button type="submit" class="btn-dark" style="margin-top:8px;">
+                Submit Review
+            </button>
+        </form>
+    </div>
+</section>
 
 {% endblock %}

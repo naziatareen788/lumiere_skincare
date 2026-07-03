@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="page-header">
+    <p class="sec-label">Your Selection</p>
+    <h1 class="page-title">Shopping Cart</h1>
+    <div class="sec-line"></div>
+</section>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash-msg {{ category }}" style="margin:16px 32px;">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<section class="cart-page">
+    {% if cart_items %}
+
+    <div class="cart-grid">
+
+        <!-- CART ITEMS -->
+        <div class="cart-items">
+            {% for item in cart_items %}
+            <div class="cart-item">
+                <div class="cart-item-img">
+                    <img src="{{ url_for('static', filename='images/' + item['image']) }}" alt="{{ item['name'] }}">
+                </div>
+                <div class="cart-item-info">
+                    <div class="cart-item-name">{{ item['name'] }}</div>
+                    <div class="cart-item-price">{{ item['price'] }}</div>
+                    <div class="cart-item-actions">
+                        <form method="POST" action="/update-cart" style="display:inline-flex;align-items:center;gap:8px;">
+                            <input type="hidden" name="product_id" value="{{ item['id'] }}">
+                            <div class="quantity-selector">
+                                <button type="submit" name="quantity" value="{{ item['quantity'] - 1 }}">−</button>
+                                <span>{{ item['quantity'] }}</span>
+                                <button type="submit" name="quantity" value="{{ item['quantity'] + 1 }}">+</button>
+                            </div>
+                        </form>
+                        <a href="/remove-from-cart/{{ item['id'] }}" class="remove-btn">Remove</a>
+                    </div>
+                </div>
+                <div class="cart-item-total">PKR {{ "{:,}".format(item['total']) }}</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- ORDER SUMMARY -->
+        <div class="cart-summary">
+            <h3 class="summary-title">Order Summary</h3>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>PKR {{ "{:,}".format(total) }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span>{% if total >= 5000 %}Free ✅{% else %}PKR 200{% endif %}</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-row summary-total">
+                <span>Total</span>
+                <span>PKR {{ "{:,}".format(total + (0 if total >= 5000 else 200)) }}</span>
+            </div>
+            {% if total < 5000 %}
+            <div class="free-shipping-msg">
+                Add PKR {{ "{:,}".format(5000 - total) }} more for free shipping!
+            </div>
+            {% endif %}
+            <a href="/checkout" class="btn-dark" style="display:block;text-align:center;margin-top:20px;padding:14px;">
+                Proceed to Checkout
+            </a>
+            <a href="/products" class="continue-shopping">← Continue Shopping</a>
+        </div>
+
+    </div>
+
+    {% else %}
+
+     <!-- EMPTY CART -->
+    <div class="empty-cart">
+        <div class="empty-cart-icon">🛒</div>
+        <h2 class="empty-cart-title">Your cart is empty</h2>
+        <p class="empty-cart-sub">Looks like you haven't added anything yet. Explore our products or take the skin quiz!</p>
+        <div style="display:flex;gap:16px;justify-content:center;margin-top:24px;">
+            <a href="/products" class="btn-dark">Shop Now</a>
+            <a href="/quiz" class="btn-outline">Take Skin Quiz</a>
+        </div>
+    </div>
+    
+    {% endif %}
+</section>
+
+{% endblock %}    
