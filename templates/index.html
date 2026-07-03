@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
 <!-- SPLASH SCREEN -->
@@ -50,16 +51,57 @@
     </div>
 </section>
 
-<!--Categories Section-->
-<!--This section is Incomplete-->
+<!-- CATEGORIES SECTION -->
 <section class="categories">
-    <h2>Shop by Category</h2>
-    <div class="category-grid">
-        <div class="category-card">Cleansers</div>
-        <div class="category-card">Toners</div>
-        <div class="category-card">Sunscreens</div>
-        <div class="category-card">Treatments</div>
+    <div class="sec-header">
+        <p class="sec-label">Our Categories</p>
+        <h2 class="sec-title">Curated Skincare<br>for Every Need</h2>
+        <div class="sec-line"></div>
     </div>
+ <div class="cats-grid">
+    <div class="cat-card" onclick="window.location='/category/cleansers'">
+        <div class="cat-img">
+            <img src="{{ url_for('static', filename='images/black-rice-cleanser.jpg.png') }}" alt="Cleansers">
+        </div>
+        <div class="cat-info">
+            <div class="cat-name">Cleansers ↗</div>
+            <div class="cat-rating">★★★★★ 4.8 • 3.2K Sold</div>
+        </div>
+    </div>
+    <div class="cat-card" onclick="window.location='/category/toners'">
+        <div class="cat-img">
+            <img src="{{ url_for('static', filename='images/heartleaf-toner.jpg.png') }}" alt="Toners">
+        </div>
+        <div class="cat-info">
+            <div class="cat-name">Toners ↗</div>
+            <div class="cat-rating">★★★★★ 4.9 • 2.1K Sold</div>
+        </div>
+    </div>
+    <div class="cat-card" onclick="window.location='/category/sunscreens'">
+        <div class="cat-img">
+            <img src="{{ url_for('static', filename='images/centella-sunscreen.jpg.png') }}" alt="Sunscreens">
+        </div>
+        <div class="cat-info">
+            <div class="cat-name">Sunscreens ↗</div>
+            <div class="cat-rating">★★★★★ 4.7 • 1.1K Sold</div>
+        </div>
+    </div>
+    <div class="cat-card" onclick="window.location='/category/treatments'">
+        <div class="cat-img">
+            <img src="{{ url_for('static', filename='images/vitaminc-serum.jpg.png') }}" alt="Treatments">
+        </div>
+        <div class="cat-info">
+            <div class="cat-name">Treatments ↗</div>
+            <div class="cat-rating">★★★★★ 4.9 • 1K Sold</div>
+        </div>
+    </div>
+</div>
+</section>
+
+
+    <div style="text-align:center; margin-top:32px; padding-bottom:56px;">
+    <a href="/products" class="btn-dark">🛍 Shop All Products</a>
+</div>
 </section>
 
 <!-- QUIZ BANNER -->

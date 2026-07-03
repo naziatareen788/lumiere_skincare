@@ -18,7 +18,7 @@
 
     <!-- NAVBAR -->
     <nav class="navbar">
-        <div class="nav-logo">Lumière</div>
+        <div class="nav-logo"><a href="/" style="text-decoration:none;color:inherit;">Lumière</a></div>
         <div class="nav-links">
             <a href="/">Home</a>
             <a href="/about">About Us</a>
@@ -28,11 +28,36 @@
             <a href="/contact">Contact</a>
         </div>
         <div class="nav-icons">
-            <a href="#">🔍</a>
-            <a href="/cart">🛒</a>
-            <a href="/login">👤</a>
-        </div>
+    <div style="display:inline-flex;align-items:center;gap:6px;">
+        <a href="#" id="searchIcon" onclick="toggleSearch(event)">🔍</a>
+        <form id="searchForm" action="/products" method="GET" style="display:none;">
+            <input type="text" name="search" id="searchInput" placeholder="Search products..." autocomplete="off"
+                   style="border:none;outline:none;background:transparent;border-bottom:1px solid currentColor;color:inherit;font-size:13px;padding:4px 2px;width:140px;">
+        </form>
+    </div>
+    <a href="/cart" style="position:relative;">🛒
+        {% if session.get('cart') and session['cart']|length > 0 %}
+            <span class="cart-count">{{ session['cart']|length }}</span>
+        {% endif %}
+    </a>
+    {% if session.get('user_name') %}
+        <span class="nav-user">👤 {{ session['user_name'].split()[0] }}</span>
+        <a href="/my-orders" style="font-size:11px;color:#4a6a40;letter-spacing:1px;text-transform:uppercase;">Orders</a>
+        <a href="/logout" class="nav-logout">Logout</a>
+    {% else %}
+        <a href="/login">👤</a>
+    {% endif %}
+</div>
     </nav>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-msg {{ category }}" style="margin:0 32px;margin-top:16px;">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
     <!-- PAGE CONTENT -->
     {% block content %}
@@ -40,11 +65,55 @@
 
     <!-- FOOTER -->
     <footer class="footer">
-        <div class="footer-logo">Lumière</div>
-        <p>Skincare rooted in science, crafted with care.</p>
-        <p>© 2026 Lumière Skincare. All rights reserved.</p>
-        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <div class="footer-top">
+            <div class="footer-newsletter">
+                <h3>Your Glow Awaits!</h3>
+                <p>Subscribe for tips, new arrivals, and exclusive offers.</p>
+                <div class="newsletter-form">
+    <form method="POST" action="/subscribe" style="display:flex;gap:0;">
+        <input type="email" name="email" placeholder="Enter your email address">
+        <button type="submit">Subscribe</button>
+    </form>
+</div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>
+                <div class="footer-logo">Lumière</div>
+                <div class="footer-tagline">Skincare rooted in science,<br>crafted with care.</div>
+            </div>
+            <div class="footer-links">
+                <h4>Shop</h4>
+                <a href="/products">All Products</a>
+                <a href="/category/cleansers">Cleansers</a>
+                <a href="/category/toners">Toners</a>
+                <a href="/category/serums">Serums</a>
+                <a href="/category/moisturizers">Moisturisers</a>
+                <a href="/category/sunscreens">SPF</a>
+                <a href="/category/treatments">Treatments</a>
+            </div>
+            <div class="footer-links">
+                <h4>Skin Types</h4>
+                <a href="/products?skin_type=Oily Skin">Oily Skin</a>
+                <a href="/products?skin_type=Dry Skin">Dry Skin</a>
+                <a href="/products?skin_type=Sensitive Skin">Sensitive Skin</a>
+                <a href="/products?skin_type=Combination Skin">Combination Skin</a>
+            </div>
+            <div class="footer-links">
+                <h4>Pages</h4>
+                <a href="/about">About Us</a>
+                <a href="/quiz">Skin Quiz</a>
+                <a href="/faq">FAQ</a>
+                <a href="/contact">Contact Us</a>
+            </div>
+        </div>
+        <div class="footer-copy">
+            <span>© 2026 Lumière Skincare. All rights reserved.</span>
+            <span>Terms & Conditions • Privacy Policy • Return Policy</span>
+        </div>
     </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 </body>
 </html>
