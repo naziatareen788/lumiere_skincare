@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="page-header">
+    <p class="sec-label">Almost There</p>
+    <h1 class="page-title">Checkout</h1>
+    <div class="sec-line"></div>
+</section>
+
+<section class="checkout-page">
+    <div class="checkout-grid">
+
+        <!-- LEFT — DELIVERY DETAILS -->
+        <div class="checkout-form">
+            <h3 class="checkout-section-title">Delivery Information</h3>
+
+            <form method="POST" action="/checkout" id="checkoutForm">
+
+                <div class="contact-field">
+                    <label>Full Name *</label>
+                    <input type="text" name="full_name" id="full_name"
+                        value="{{ session.get('user_name', '') }}"
+                        placeholder="Enter your full name">
+                </div>
+
+                <div class="contact-field">
+                    <label>Email Address *</label>
+                    <input type="email" name="email" id="email"
+                        value="{{ session.get('user_email', '') }}"
+                        placeholder="your@email.com">
+                </div>
+
+                <div class="contact-field">
+                    <label>Phone Number *</label>
+                    <input type="tel" name="phone" id="phone"
+                        placeholder="03XX-XXXXXXX">
+                </div>
+
+                <div class="contact-field">
+                    <label>Delivery Address *</label>
+                    <textarea name="address" id="address" rows="3"
+                        placeholder="House/Flat no, Street, Area"></textarea>
+                </div>
+
+                <div class="contact-field">
+                    <label>City *</label>
+                    <input type="text" name="city" id="city"
+                        placeholder="Enter your city name">
+                </div>
+
+                <h3 class="checkout-section-title" style="margin-top:32px;">Payment Method</h3>
+
+                <div class="payment-options">
+                    <label class="payment-option active" id="cod-option" onclick="selectPayment('cod')">
+                        <input type="radio" name="payment" value="cod" checked>
+                        <div class="payment-label">
+                            <span class="payment-icon">💵</span>
+                            <div>
+                                <div class="payment-name">Cash on Delivery</div>
+                                <div class="payment-sub">Pay when your order arrives</div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="payment-option" id="online-option" onclick="selectPayment('online')">
+                        <input type="radio" name="payment" value="online">
+                        <div class="payment-label">
+                            <span class="payment-icon">🏦</span>
+                            <div>
+                                <div class="payment-name">Online Transfer</div>
+                                <div class="payment-sub">Bank transfer — send receipt to confirm order</div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- ONLINE TRANSFER DETAILS -->
+                 <div class="online-transfer-box" id="onlineTransferBox" style="display:none;">
+                    <div class="transfer-header">
+                        <span class="transfer-icon">🏦</span>
+                        <h4>Bank Transfer Details</h4>
+                    </div>
+                    <div class="transfer-details">
+                        <div class="transfer-row">
+                            <span>Bank Name</span>
+                            <strong>HBL — Habib Bank Limited</strong>
+                        </div>
+                        <div class="transfer-row">
+                            <span>Account Title</span>
+                            <strong>Lumière Skincare</strong>
+                        </div>
+                        <div class="transfer-row">
+                            <span>Account Number</span>
+                            <strong>0123-4567890-001</strong>
+                        </div>
+                        <div class="transfer-row">
+                            <span>IBAN</span>
+                            <strong>PK00HABB0001234567890</strong>
+                        </div>
+                    </div>
+                    <div class="transfer-note">
+                        <span>📧</span>
+                        <p>After transfer, please send your payment receipt to <strong>hello@lumiere.co</strong> with your name and order details. Your order will be confirmed once payment is verified.</p>
+                    </div>
+                </div>
+
+                <!-- ORDER SUMMARY MOBILE -->
+                 <div class="checkout-summary-inline">
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span>PKR {{ "{:,}".format(total) }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span>{% if shipping == 0 %}Free ✅{% else %}PKR 200{% endif %}</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-row summary-total">
+                        <span>Total</span>
+                        <span>PKR {{ "{:,}".format(grand_total) }}</span>
+                    </div>
+                </div>
+
+                <button type="button" onclick="validateCheckout()" class="btn-dark"
+                    style="width:100%;padding:16px;margin-top:24px;font-size:13px;letter-spacing:2px;">
+                    Place Order ✓
+                </button>
+
+            </form>
+        </div>
+
+        <!-- RIGHT — ORDER SUMMARY -->
+        
+        
+    </div>
+</section>
+
+
+{% endblock %}      

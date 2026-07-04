@@ -35,7 +35,7 @@ if (loginForm) {
         }
 
         if (valid) {
-            alert('Login form is valid! (Backend not connected yet)');
+            alert('Login form is valid! ');
         }
     });
 }

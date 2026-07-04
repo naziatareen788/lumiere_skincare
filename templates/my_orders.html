@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="page-header">
+    <p class="sec-label">Your Account</p>
+    <h1 class="page-title">My Orders</h1>
+    <div class="sec-line"></div>
+</section>
+
+<section class="orders-page">
+    {% if orders %}
+        {% for order in orders %}
+        <div class="order-card">
+            <div class="order-header">
+                <div>
+                    <div class="order-number">#LUM-{{ '%04d' % order.id }}</div>
+                    <div class="order-date">{{ order.created_at.strftime('%d %B %Y') }}</div>
+                </div>
+                <div class="status-badge">{{ order.status }}</div>
+            </div>
+            <div class="order-body">
+                <div class="order-info-row">
+                    <span>Delivery To</span>
+                    <span>{{ order.address }}, {{ order.city }}</span>
+                </div>
+                <div class="order-info-row">
+                    <span>Total Amount</span>
+                    <span>PKR {{ "{:,}".format(order.total|int) }}</span>
+                </div>
+                <div class="order-info-row">
+                    <span>Payment</span>
+                    <span>Cash on Delivery</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-cart" style="padding:80px 32px;">
+            <div class="empty-cart-icon">📦</div>
+            <h2 class="empty-cart-title">No orders yet</h2>
+            <p class="empty-cart-sub">You haven't placed any orders yet. Start shopping!</p>
+            <div style="margin-top:24px;">
+                <a href="/products" class="btn-dark">Shop Now</a>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+{% endblock %}
