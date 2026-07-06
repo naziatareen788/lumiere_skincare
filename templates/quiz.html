@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="quiz-page">
+
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <p class="sec-label">Personalised Skincare</p>
+            <h1 class="quiz-title">Find Your Perfect Routine</h1>
+            <p class="quiz-sub">Answer 3 simple questions and we will recommend the best products for your skin.</p>
+        </div>
+
+        <form method="POST" action="/quiz-result" id="quizForm">
+
+            <!-- STEP 1 — NAME -->
+            <div class="quiz-step-box active" id="step1">
+                <div class="quiz-step-num">Question 1 of 3</div>
+                <h2 class="quiz-question">What is your name?</h2>
+                <div class="contact-field">
+                    <input type="text" name="user_name" id="user_name"
+                        value="{{ session.get('user_name', '') }}"
+                        placeholder="Enter your name">
+                </div>
+                <button type="button" class="btn-dark quiz-next-btn"
+                    onclick="nextStep(1)">Next →</button>
+            </div>
+
+            <!-- STEP 2 — SKIN TYPE -->
+            <div class="quiz-step-box" id="step2">
+                <div class="quiz-step-num">Question 2 of 3</div>
+                <h2 class="quiz-question">What is your skin type?</h2>
+                <p class="quiz-hint">Select one option</p>
+                <div class="quiz-options">
+                    <label class="quiz-option">
+                        <input type="radio" name="skin_type" value="Oily" required>
+                        <div class="quiz-option-card">
+                            <div class="quiz-option-icon">💧</div>
+                            <div class="quiz-option-name">Oily Skin</div>
+                            <div class="quiz-option-desc">Shiny, enlarged pores, prone to breakouts</div>
+                        </div>
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="skin_type" value="Dry">
+                        <div class="quiz-option-card">
+                            <div class="quiz-option-icon">🌵</div>
+                            <div class="quiz-option-name">Dry Skin</div>
+                            <div class="quiz-option-desc">Tight, flaky, rough texture</div>
+                        </div>
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="skin_type" value="Sensitive">
+                        <div class="quiz-option-card">
+                            <div class="quiz-option-icon">🌸</div>
+                            <div class="quiz-option-name">Sensitive Skin</div>
+                            <div class="quiz-option-desc">Easily irritated, redness, reacts to products</div>
+                        </div>
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="skin_type" value="Combination">
+                        <div class="quiz-option-card">
+                            <div class="quiz-option-icon">✨</div>
+                            <div class="quiz-option-name">Combination Skin</div>
+                            <div class="quiz-option-desc">Oily T-zone, dry cheeks</div>
+                        </div>
+                    </label>
+                </div>
+                <div style="display:flex;gap:12px;margin-top:24px;">
+                    <button type="button" class="btn-outline"
+                        onclick="prevStep(2)">← Back</button>
+                    <button type="button" class="btn-dark quiz-next-btn"
+                        onclick="nextStep(2)">Next →</button>
+                </div>
+            </div>
+
+            <!-- STEP 3 — SKIN CONCERNS -->
+            <div class="quiz-step-box" id="step3">
+                <div class="quiz-step-num">Question 3 of 3</div>
+                <h2 class="quiz-question">What are your skin concerns?</h2>
+                <p class="quiz-hint">Select minimum 1, maximum 3</p>
+                <div class="quiz-concerns-grid">
+                    <label class="concern-option">
+                        <input type="checkbox" name="concerns" value="Large Pore">
+                        <div class="concern-card">🕳️ Large Pore</div>
+                    </label>
+                    <label class="concern-option">
+                        <input type="checkbox" name="concerns" value="Blackheads">
+                        <div class="concern-card">⚫ Blackheads</div>
+                    </label>
+                    <label class="concern-option">
+                        <input type="checkbox" name="concerns" value="Wrinkles">
+                        <div class="concern-card">〰️ Wrinkles</div>
+                    </label>
+                    <label class="concern-option">
+                        <input type="checkbox" name="concerns" value="Acne">
+                        <div class="concern-card">🔴 Acne</div>
+                    </label>
+                    <label class="concern-option">
+                        <input type="checkbox" name="concerns" value="Rosacea">
+                        <div class="concern-card">🌹 Rosacea</div>
+                    </label>
+                    <label class="concern-option">
+                        <input type="checkbox" name="concerns" value="Hyperpigmentation">
+                        <div class="concern-card">🟤 Hyperpigmentation</div>
+                    </label>
+                    <label class="concern-option">
+                        <input type="checkbox" name="concerns" value="Excess Oil">
+                        <div class="concern-card">✨ Excess Oil</div>
+                    </label>
+                    <label class="concern-option">
+                        <input type="checkbox" name="concerns" value="Dark Spots">
+                        <div class="concern-card">🌑 Dark Spots</div>
+                    </label>
+                    <label class="concern-option">
+                        <input type="checkbox" name="concerns" value="Hydration">
+                        <div class="concern-card">💦 Hydration</div>
+                    </label>
+                </div>
+                <div style="display:flex;gap:12px;margin-top:24px;">
+                    <button type="button" class="btn-outline"
+                        onclick="prevStep(3)">← Back</button>
+                    <button type="submit" class="btn-dark">
+                        Get My Routine ✦
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</section>
+
+
+{% endblock %}
