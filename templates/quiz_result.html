@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="quiz-result-page">
+
+    <div class="result-header">
+        <p class="sec-label">Your Personalised Routine</p>
+        <h1 class="result-title">Hello, {{ user_name }}! ✨</h1>
+        <p class="result-sub">
+            Based on your <strong>{{ skin_type }} Skin</strong>
+            {% if concerns %}
+            and concerns:
+            {% for concern in concerns %}
+                <span class="concern-tag">{{ concern }}</span>
+            {% endfor %}
+            {% endif %}
+        </p>
+        <p class="result-sub" style="margin-top:8px;">Here is your personalised skincare routine:</p>
+    </div>
+
+    <div class="routine-grid">
+        {% for item in routine %}
+        <div class="routine-card">
+            <div class="routine-step">Step {{ item.step }}</div>
+            <div class="routine-type">{{ item.type }}</div>
+            <div class="routine-img">
+                <img src="{{ url_for('static', filename='images/' + item['image']) }}"
+                     alt="{{ item['name'] }}">
+            </div>
+            <div class="routine-name">{{ item['name'] }}</div>
+            <form method="POST" action="/add-to-cart">
+                <input type="hidden" name="product_id" value="{{ item['id'] }}">
+                <button type="submit" class="add-cart">Add to Cart</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div style="text-align:center;margin-top:48px;padding-bottom:56px;">
+        <a href="/quiz" class="btn-outline" style="margin-right:12px;">Retake Quiz</a>
+        <a href="/cart" class="btn-dark">View Cart 🛒</a>
+    </div>
+
+</section>
+
+{% endblock %}

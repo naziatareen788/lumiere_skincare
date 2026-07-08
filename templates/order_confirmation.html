@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="confirmation-page">
+    <div class="confirmation-box">
+        <div class="confirmation-icon">✓</div>
+        <h1 class="confirmation-title">Order Placed Successfully!</h1>
+        <p class="confirmation-sub">Thank you for your order, {{ order.full_name }}!</p>
+
+        <div class="confirmation-details">
+            <div class="conf-row">
+                <span>Order Number</span>
+                <span>#LUM-{{ '%04d' % order.id }}</span>
+            </div>
+            <div class="conf-row">
+                <span>Total Amount</span>
+                <span>PKR {{ "{:,}".format(order.total|int) }}</span>
+            </div>
+            <div class="conf-row">
+                <span>Delivery Address</span>
+                <span>{{ order.address }}, {{ order.city }}</span>
+            </div>
+            <div class="conf-row">
+                <span>Payment Method</span>
+                <span>Cash on Delivery</span>
+            </div>
+            <div class="conf-row">
+                <span>Status</span>
+                <span class="status-badge">{{ order.status }}</span>
+            </div>
+        </div>
+
+        <p class="confirmation-note">
+            A confirmation will be sent to <strong>{{ order.email }}</strong>.
+            Your order will be delivered within 3-5 business days.
+        </p>
+
+        <div style="display:flex;gap:16px;justify-content:center;margin-top:32px;">
+            <a href="/products" class="btn-dark">Continue Shopping</a>
+            <a href="/my-orders" class="btn-outline">View My Orders</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
