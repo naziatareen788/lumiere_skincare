@@ -9,6 +9,57 @@ window.addEventListener('load', function() {
 });
 
 
+// ===== NAVBAR SEARCH TOGGLE =====
+function toggleSearch(e) {
+    e.preventDefault();
+    var form = document.getElementById('searchForm');
+    var input = document.getElementById('searchInput');
+    var isHidden = (form.style.display === 'none' || form.style.display === '');
+
+    if (isHidden) {
+        form.style.display = 'inline-flex';
+        input.focus();
+    } else if (input.value.trim() !== '') {
+        form.submit();
+    } else {
+        form.style.display = 'none';
+    }
+}
+
+
+// ===== FILTER BUTTONS — HOMEPAGE =====
+const filterBtns = document.querySelectorAll('.ftag');
+filterBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        filterBtns.forEach(function(b) {
+            b.classList.remove('active');
+        });
+        this.classList.add('active');
+
+        const selected = this.textContent.trim();
+        const cards = document.querySelectorAll('.products-grid .prod-card');
+
+        cards.forEach(function(card) {
+            const category = card.getAttribute('data-category');
+            if (selected === 'All') {
+                card.style.display = 'block';
+            } else if (category === selected) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+
+// ===== FAQ ACCORDION =====
+const faqItems = document.querySelectorAll('.faq-item');
+faqItems.forEach(function(item) {
+    item.addEventListener('click', function() {
+        this.classList.toggle('open');
+    });
+});
+
 // ===== LOGIN VALIDATION =====
 const loginForm = document.querySelector('form[action="/login"]');
 if (loginForm) {
