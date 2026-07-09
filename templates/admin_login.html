@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login — Lumière</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body style="background:#f8fbf5;">
+
+<section class="auth-page">
+    <div class="auth-box">
+        <div class="auth-header">
+            <div style="font-family:'Playfair Display',serif;font-size:28px;color:#2d4a2d;letter-spacing:4px;margin-bottom:8px;">Lumière</div>
+            <h1 class="auth-title">Admin Login</h1>
+            <p class="auth-sub">Restricted access — authorised personnel only</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-msg {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/admin/login">
+            <div class="auth-field">
+                <label>Admin Email</label>
+                <input type="email" name="email" placeholder="admin@lumiere.co" required>
+            </div>
+            <div class="auth-field">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Enter admin password" required>
+            </div>
+            <button type="submit" class="btn-dark auth-btn">Login to Admin Panel</button>
+        </form>
+    </div>
+</section>
+
+</body>
+</html>
