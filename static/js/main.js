@@ -177,6 +177,162 @@ filterCheckboxes.forEach(function(checkbox) {
     });
 });
 
+// ===== AUTO FILTER ON PAGE LOAD =====
+window.addEventListener('DOMContentLoaded', function() {
+
+    var catParam = typeof activeCategory !== 'undefined' ? activeCategory : 'all';
+    var skinParam = typeof activeSkinType !== 'undefined' ? activeSkinType : 'all';
+
+    var titleEl = document.getElementById('pageTitle');
+    if (titleEl) {
+        if (catParam !== 'all') {
+            titleEl.textContent = catParam;
+        } else if (skinParam !== 'all') {
+            titleEl.textContent = skinParam + ' Type';
+        } else {
+            titleEl.textContent = 'All Products';
+        }
+    }
+
+    var cards = document.querySelectorAll('.products-grid-full .prod-card');
+    if (cards.length === 0) return;
+
+    if (catParam === 'all' && skinParam === 'all') return;
+
+    cards.forEach(function(card) {
+        var cardCat = card.getAttribute('data-category') || '';
+        var cardSkin = card.getAttribute('data-skin') || '';
+        var show = false;
+
+        if (catParam !== 'all') {
+            var catLower = catParam.toLowerCase();
+            var cardCatLower = cardCat.toLowerCase();
+
+            if (catLower === 'cleansers' && cardCatLower === 'cleanser') show = true;
+            else if (catLower === 'toners' && cardCatLower === 'toner') show = true;
+            else if (catLower === 'serums' && cardCatLower === 'serum') show = true;
+            else if (catLower === 'moisturizers' && cardCatLower === 'moisturizer') show = true;
+            else if (catLower === 'sunscreens' && cardCatLower === 'sunscreen') show = true;
+            else if (catLower === 'treatments' && (cardCatLower === 'mask' || cardCatLower === 'serum' || cardCatLower === 'toner')) show = true;
+        }
+
+        if (skinParam !== 'all') {
+            var skinLower = skinParam.toLowerCase();
+            var cardSkinLower = cardSkin.toLowerCase();
+            show = cardSkinLower.includes(skinLower) || cardSkinLower.includes('all');
+        }
+
+        card.style.display = show ? 'block' : 'none';
+    });
+
+    var countEl = document.querySelector('.products-count');
+    if (countEl) {
+        var visible = document.querySelectorAll('.products-grid-full .prod-card[style="display: block;"]').length;
+        countEl.textContent = 'Showing ' + visible + ' products';
+    }
+});
+
+// ===== SEARCH FILTER — SHOP PAGE =====
+window.addEventListener('load', function () {
+    var searchVal = typeof searchQuery !== 'undefined' ? searchQuery : '';
+    var searchDisplay = typeof searchQueryDisplay !== 'undefined' ? searchQueryDisplay : '';
+
+    if (!searchVal) return;
+
+    var cards = document.querySelectorAll('.prod-card');
+    var visibleCount = 0;
+
+    cards.forEach(function (card) {
+        var nameEl = card.querySelector('.prod-name');
+        var name = nameEl ? nameEl.textContent.toLowerCase() : '';
+        var matches = name.indexOf(searchVal) !== -1;
+
+        if (!matches) {
+            card.style.display = 'none';
+        } else if (card.style.display !== 'none') {
+            visibleCount++;
+        }
+    });
+
+    var titleEl = document.getElementById('pageTitle');
+    if (titleEl) {
+        titleEl.textContent = 'Search results for "' + searchDisplay + '"';
+    }
+
+    var countEl = document.querySelector('.products-count');
+    if (countEl) {
+        countEl.textContent = 'Showing ' + visibleCount + ' result' + (visibleCount === 1 ? '' : 's');
+    }
+
+    if (visibleCount === 0) {
+        var grid = document.querySelector('.products-grid-full');
+        if (grid) {
+            grid.innerHTML = '<p style="padding:40px;text-align:center;color:#888;">No products found matching "' + searchDisplay + '". Try a different keyword.</p>';
+        }
+    }
+});
+
+// ===== CHECKOUT — PAYMENT SELECTION =====
+function selectPayment(type) {
+    document.getElementById('cod-option').classList.remove('active');
+    document.getElementById('online-option').classList.remove('active');
+    document.getElementById('onlineTransferBox').style.display = 'none';
+
+    if (type === 'cod') {
+        document.getElementById('cod-option').classList.add('active');
+        document.querySelector('input[value="cod"]').checked = true;
+    } else {
+        document.getElementById('online-option').classList.add('active');
+        document.querySelector('input[value="online"]').checked = true;
+        document.getElementById('onlineTransferBox').style.display = 'block';
+    }
+}
+
+// ===== CHECKOUT — FORM VALIDATION =====
+function validateCheckout() {
+    const fields = [
+        { id: 'full_name', msg: 'Please enter your full name!' },
+        { id: 'email', msg: 'Please enter your email address!' },
+        { id: 'phone', msg: 'Please enter your phone number!' },
+        { id: 'address', msg: 'Please enter your delivery address!' },
+        { id: 'city', msg: 'Please enter your city!' }
+    ];
+
+    let valid = true;
+
+    fields.forEach(function(field) {
+        const el = document.getElementById(field.id);
+        const existing = el.parentElement.querySelector('.form-alert');
+        if (existing) existing.remove();
+        el.style.borderColor = '#d8e8d0';
+
+        if (!el.value.trim()) {
+            const alert = document.createElement('div');
+            alert.className = 'form-alert error';
+            alert.textContent = field.msg;
+            el.parentElement.appendChild(alert);
+            el.style.borderColor = '#c0392b';
+            valid = false;
+        }
+    });
+
+    const phone = document.getElementById('phone');
+    if (phone && phone.value.trim() && !/^[0-9\-\+]{10,13}$/.test(phone.value.trim())) {
+        const existing = phone.parentElement.querySelector('.form-alert');
+        if (existing) existing.remove();
+        const alert = document.createElement('div');
+        alert.className = 'form-alert error';
+        alert.textContent = 'Please enter a valid phone number!';
+        phone.parentElement.appendChild(alert);
+        phone.style.borderColor = '#c0392b';
+        valid = false;
+    }
+
+    if (valid) {
+        document.getElementById('checkoutForm').submit();
+    }
+}
+
 // ===== LOGIN VALIDATION =====
 const loginForm = document.querySelector('form[action="/login"]');
 if (loginForm) {
