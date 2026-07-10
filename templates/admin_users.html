@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Users — Lumière</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body style="background:#f8fbf5;">
+
+<nav class="navbar">
+    <div class="nav-logo">Lumière Admin</div>
+    <div class="nav-links">
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/orders">Orders</a>
+        <a href="/admin/users">Users</a>
+        <a href="/">View Website</a>
+    </div>
+    <div class="nav-icons">
+        <a href="/admin/logout" class="nav-logout">Logout</a>
+    </div>
+</nav>
+
+<section style="padding:40px 32px;">
+
+    <div style="margin-bottom:32px;">
+        <p class="sec-label">Manage</p>
+        <h1 style="font-family:'Playfair Display',serif;font-size:32px;font-weight:400;color:#1a2418;">Registered Users</h1>
+    </div>
+
+    <!-- SEARCH BAR -->
+    <form method="GET" action="/admin/users" style="margin-bottom:24px;display:flex;gap:12px;">
+        <input type="text" name="search" value="{{ search }}"
+            placeholder="Search by name or email..."
+            style="flex:1;border:0.5px solid #d8e8d0;padding:12px 16px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:#f8fbf5;">
+        <button type="submit" class="btn-dark" style="padding:12px 24px;font-size:12px;letter-spacing:2px;">Search</button>
+        {% if search %}
+        <a href="/admin/users" class="btn-outline" style="padding:12px 24px;font-size:12px;letter-spacing:2px;">Clear</a>
+        {% endif %}
+    </form>
+
+    {% if search %}
+    <p style="font-size:13px;color:#888;margin-bottom:16px;">
+        Search results for: <strong>{{ search }}</strong> — {{ users|length }} found
+    </p>
+    {% endif %}
