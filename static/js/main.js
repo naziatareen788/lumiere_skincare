@@ -333,6 +333,86 @@ function validateCheckout() {
     }
 }
 
+// ===== QUIZ — STEP NAVIGATION =====
+function nextStep(current) {
+    if (current === 1) {
+        const name = document.getElementById('user_name');
+        if (name && !name.value.trim()) {
+            alert('Please enter your name!');
+            return;
+        }
+    }
+
+    if (current === 2) {
+        const skinType = document.querySelector('input[name="skin_type"]:checked');
+        if (!skinType) {
+            alert('Please select your skin type!');
+            return;
+        }
+    }
+
+    document.getElementById('step' + current).classList.remove('active');
+    document.getElementById('step' + (current + 1)).classList.add('active');
+}
+
+function prevStep(current) {
+    document.getElementById('step' + current).classList.remove('active');
+    document.getElementById('step' + (current - 1)).classList.add('active');
+}
+
+// ===== QUIZ — MAX 3 CONCERNS =====
+var concernCheckboxes = document.querySelectorAll('input[name="concerns"]');
+if (concernCheckboxes.length > 0) {
+    concernCheckboxes.forEach(function(cb) {
+        cb.addEventListener('change', function() {
+            const checked = document.querySelectorAll('input[name="concerns"]:checked');
+            if (checked.length > 3) {
+                this.checked = false;
+                alert('You can select maximum 3 concerns!');
+            }
+        });
+    });
+
+    var quizForm = document.getElementById('quizForm');
+    if (quizForm) {
+        quizForm.addEventListener('submit', function(e) {
+            const checked = document.querySelectorAll('input[name="concerns"]:checked');
+            if (checked.length === 0) {
+                e.preventDefault();
+                alert('Please select at least 1 skin concern!');
+            }
+        });
+    }
+}
+
+// ===== NEWSLETTER SUBSCRIBE =====
+const subscribeBtn = document.querySelector('.newsletter-form button');
+const subscribeInput = document.querySelector('.newsletter-form input');
+
+if (subscribeBtn && subscribeInput) {
+    subscribeBtn.addEventListener('click', function() {
+        const email = subscribeInput.value.trim();
+
+        if (email === '') {
+            showAlert(subscribeInput, 'Please enter your email address!', 'error');
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            showAlert(subscribeInput, 'Please enter a valid email address!', 'error');
+            return;
+        }
+
+        subscribeInput.value = '';
+        subscribeBtn.textContent = '✓ Subscribed!';
+        subscribeBtn.style.background = '#4a6a40';
+        setTimeout(function() {
+            subscribeBtn.textContent = 'Subscribe';
+            subscribeBtn.style.background = '#a8c890';
+        }, 3000);
+    });
+}
+
 // ===== LOGIN VALIDATION =====
 const loginForm = document.querySelector('form[action="/login"]');
 if (loginForm) {

@@ -44,3 +44,41 @@
         Search results for: <strong>{{ search }}</strong> — {{ users|length }} found
     </p>
     {% endif %}
+
+        <div style="background:#fff;border:0.5px solid #d8e8d0;overflow:hidden;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+            <thead>
+                <tr style="background:#f0f5ee;border-bottom:0.5px solid #d8e8d0;">
+                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">#</th>
+                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Full Name</th>
+                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Email</th>
+                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Total Orders</th>
+                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Total Spent</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr style="border-bottom:0.5px solid #f0f5ee;">
+                    <td style="padding:14px 20px;color:#888;">{{ user.id }}</td>
+                    <td style="padding:14px 20px;color:#1a2418;font-weight:500;">{{ user.full_name }}</td>
+                    <td style="padding:14px 20px;color:#5a6a58;">{{ user.email }}</td>
+                    <td style="padding:14px 20px;color:#5a6a58;">
+                        {{ user.orders|length if user.orders else 0 }}
+                    </td>
+                    <td style="padding:14px 20px;color:#2d4a2d;font-weight:500;">
+                        PKR {{ "{:,}".format(user.orders|sum(attribute='total')|int) if user.orders else 0 }}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="padding:24px;text-align:center;color:#888;">No users registered yet</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+</body>
+</html>
