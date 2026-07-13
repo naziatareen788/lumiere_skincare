@@ -522,9 +522,6 @@ if (loginForm) {
             valid = false;
         }
 
-        if (valid) {
-            alert('Login form is valid! ');
-        }
     });
 }
 
@@ -562,10 +559,6 @@ if (registerForm) {
         if (password.value && confirmPassword.value && password.value !== confirmPassword.value) {
             showFieldError(confirmPassword, 'Passwords do not match!');
             valid = false;
-        }
-
-        if (valid) {
-            alert('Registration form is valid! (Backend not connected yet)');
         }
     });
 }
