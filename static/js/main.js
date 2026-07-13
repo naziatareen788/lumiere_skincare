@@ -413,6 +413,90 @@ if (subscribeBtn && subscribeInput) {
     });
 }
 
+// ===== CONTACT FORM =====
+const contactBtn = document.querySelector('.contact-form-box .btn-dark');
+if (contactBtn) {
+    contactBtn.addEventListener('click', function() {
+        const fields = document.querySelectorAll('.contact-form-box input, .contact-form-box textarea');
+        let valid = true;
+
+        fields.forEach(function(field) {
+            if (field.value.trim() === '') {
+                showAlert(field, 'This field is required!', 'error');
+                valid = false;
+            } else if (field.type === 'email' && !isValidEmail(field.value.trim())) {
+                showAlert(field, 'Please enter a valid email!', 'error');
+                valid = false;
+            } else {
+                clearAlert(field);
+            }
+        });
+
+        if (valid) {
+            fields.forEach(function(field) { field.value = ''; });
+            contactBtn.textContent = '✓ Message Sent!';
+            contactBtn.style.background = '#4a6a40';
+            setTimeout(function() {
+                contactBtn.textContent = 'Send Message';
+                contactBtn.style.background = '#2d4a2d';
+            }, 3000);
+        }
+    });
+}
+
+// ===== REVIEW FORM =====
+// const reviewBtn = document.querySelector('.write-review .btn-dark');
+// if (reviewBtn) {
+   // reviewBtn.addEventListener('click', function() {
+     //   const nameField = document.querySelector('.write-review input[type="text"]');
+//        const reviewField = document.querySelector('.write-review textarea');
+//        let valid = true;
+//
+//        if (nameField && nameField.value.trim() === '') {
+//            showAlert(nameField, 'Please enter your name!', 'error');
+//            valid = false;
+//        } else if (nameField) {
+//            clearAlert(nameField);
+//        }
+//        if (reviewField && reviewField.value.trim() === '') {
+//            showAlert(reviewField, 'Please write your review!', 'error');
+//            valid = false;
+//        } else if (reviewField) {
+//            clearAlert(reviewField);
+//        }
+//        if (valid) {
+//            if (nameField) nameField.value = '';
+//            if (reviewField) reviewField.value = '';
+//            reviewBtn.textContent = '✓ Review Submitted!';
+//            reviewBtn.style.background = '#4a6a40';
+//            setTimeout(function() {
+//                reviewBtn.textContent = 'Submit Review';
+//                reviewBtn.style.background = '#2d4a2d';
+//            }, 3000);
+//        }
+//    });
+//}
+
+// ===== HELPER FUNCTIONS =====
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function showAlert(field, message, type) {
+    clearAlert(field);
+    const alert = document.createElement('div');
+    alert.className = 'form-alert ' + type;
+    alert.textContent = message;
+    field.parentElement.appendChild(alert);
+    field.style.borderColor = type === 'error' ? '#c0392b' : '#2d4a2d';
+}
+
+function clearAlert(field) {
+    const existing = field.parentElement.querySelector('.form-alert');
+    if (existing) existing.remove();
+    field.style.borderColor = '#d8e8d0';
+}
+
 // ===== LOGIN VALIDATION =====
 const loginForm = document.querySelector('form[action="/login"]');
 if (loginForm) {
