@@ -54,6 +54,7 @@
                     <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Email</th>
                     <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Total Orders</th>
                     <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Total Spent</th>
+                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,6 +68,15 @@
                     </td>
                     <td style="padding:14px 20px;color:#2d4a2d;font-weight:500;">
                         PKR {{ "{:,}".format(user.orders|sum(attribute='total')|int) if user.orders else 0 }}
+                    </td>
+                    <td style="padding:14px 20px;">
+                        <form method="POST" action="/admin/delete-user/{{ user.id }}">
+                            <button type="submit"
+                                onclick="return confirm('Are you sure you want to remove this user?')"
+                                class="btn-remove">
+                                Remove
+                            </button>
+                        </form>
                     </td>
                 </tr>
                 {% else %}
