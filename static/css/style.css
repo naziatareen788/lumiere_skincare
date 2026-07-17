@@ -2023,3 +2023,327 @@ a {
     padding: 12px 16px;
     font-size: 11px;
 }
+
+/* ===== ADMIN PANEL ===== */
+.admin-body {
+    background: #f8fbf5;
+}
+
+.admin-section {
+    padding: 40px 32px;
+}
+
+.admin-header {
+    text-align: left;
+    padding: 0 0 32px;
+}
+
+.admin-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #1a2418;
+}
+
+.admin-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #1a2418;
+    margin-bottom: 20px;
+}
+
+.admin-actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.admin-stat-card {
+    background: #fff;
+    border: 0.5px solid #d8e8d0;
+    padding: 28px;
+}
+
+.admin-stat-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #4a6a40;
+    margin-bottom: 8px;
+}
+
+.admin-stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    color: #1a2418;
+}
+
+.admin-stat-value.danger { color: #c0392b; }
+.admin-stat-value.small { font-size: 32px; color: #2d4a2d; }
+
+.admin-table-wrap {
+    background: #fff;
+    border: 0.5px solid #d8e8d0;
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.admin-table thead tr {
+    background: #f0f5ee;
+    border-bottom: 0.5px solid #d8e8d0;
+}
+
+.admin-table th {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #4a6a40;
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: 14px 20px;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr {
+    border-bottom: 0.5px solid #f0f5ee;
+}
+
+.admin-table tbody tr:last-child { border-bottom: none; }
+
+.admin-table .empty-row {
+    padding: 24px;
+    text-align: center;
+    color: #888;
+}
+
+.text-strong { color: #1a2418; font-weight: 500; }
+.text-brand { color: #2d4a2d; font-weight: 500; }
+.text-muted { color: #888; font-size: 11px; }
+.text-secondary { color: #5a6a58; }
+
+.admin-status-select {
+    border: 0.5px solid #d8e8d0;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    color: #1a2418;
+    background: #f8fbf5;
+    outline: none;
+}
+
+.admin-inline-form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.admin-btn-sm {
+    padding: 6px 14px;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.admin-thumb {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border: 0.5px solid #d8e8d0;
+}
+
+.admin-search-bar {
+    margin-bottom: 24px;
+    display: flex;
+    gap: 12px;
+}
+
+.admin-search-bar input {
+    flex: 1;
+    border: 0.5px solid #d8e8d0;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    background: #f8fbf5;
+}
+
+.admin-search-note {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 16px;
+}
+
+.admin-form-box {
+    background: #fff;
+    border: 0.5px solid #d8e8d0;
+    padding: 32px;
+    max-width: 640px;
+}
+
+.admin-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.admin-current-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 0.5px solid #d8e8d0;
+    margin-bottom: 12px;
+    display: block;
+}
+
+/* ===== SPACING / LAYOUT UTILITIES ===== */
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-20 { margin-top: 20px; }
+.mt-24 { margin-top: 24px; }
+.mt-32 { margin-top: 32px; }
+.mt-48 { margin-top: 48px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.pb-56 { padding-bottom: 56px; }
+.text-center { text-align: center; }
+.cursor-pointer { cursor: pointer; }
+.full-width { width: 100%; }
+.btn-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+.btn-row.left { justify-content: flex-start; }
+.search-empty { padding: 40px; text-align: center; color: #888; }
+
+.admin-login-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: #2d4a2d;
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+}
+
+/* ===== MORE SPACING UTILITIES ===== */
+.mr-12 { margin-right: 12px; }
+.hidden { display: none !important; }
+
+/* ===== SHARED SMALL COMPONENTS ===== */
+.form-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-block-cta {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    padding: 14px;
+}
+
+.empty-state-lg {
+    padding: 80px 32px;
+}
+
+.checkout-submit-btn {
+    width: 100%;
+    padding: 16px;
+    margin-top: 24px;
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+
+.quiz-nav-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.review-date {
+    font-size: 10px;
+    color: #aaa;
+    margin-top: 4px;
+}
+
+.no-reviews-msg {
+    padding: 32px;
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+}
+
+.hero-img-fill {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-img-fallback {
+    color: #a8c890;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 2px;
+}
+
+/* ===== NAVBAR PIECES ===== */
+.nav-logo a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav-search-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-search-form {
+    display: inline-flex;
+}
+
+.nav-search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    border-bottom: 1px solid currentColor;
+    color: inherit;
+    font-size: 13px;
+    padding: 4px 2px;
+    width: 140px;
+}
+
+.nav-cart-link {
+    position: relative;
+}
+
+.nav-orders-link {
+    font-size: 11px;
+    color: #4a6a40;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.newsletter-inline-form {
+    display: flex;
+    gap: 0;
+}
