@@ -18,31 +18,30 @@
 
     <!-- NAVBAR -->
     <nav class="navbar">
-        <div class="nav-logo"><a href="/" style="text-decoration:none;color:inherit;">Lumière</a></div>
+        <div class="nav-logo"><a href="/">Lumière</a></div>
         <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/about">About Us</a>
-            <a href="/products">Shop</a>
-            <a href="/quiz">Skin Quiz</a>
-            <a href="/faq">FAQ</a>
-            <a href="/contact">Contact</a>
+            <a href="/" class="{{ 'active' if request.path == '/' }}">Home</a>
+            <a href="/about" class="{{ 'active' if request.path == '/about' }}">About Us</a>
+            <a href="/products" class="{{ 'active' if request.path == '/products' }}">Shop</a>
+            <a href="/quiz" class="{{ 'active' if request.path.startswith('/quiz') }}">Skin Quiz</a>
+            <a href="/faq" class="{{ 'active' if request.path == '/faq' }}">FAQ</a>
+            <a href="/contact" class="{{ 'active' if request.path == '/contact' }}">Contact</a>
         </div>
         <div class="nav-icons">
-    <div style="display:inline-flex;align-items:center;gap:6px;">
+    <div class="nav-search-wrap">
         <a href="#" id="searchIcon" onclick="toggleSearch(event)">🔍</a>
-        <form id="searchForm" action="/products" method="GET" style="display:none;">
-            <input type="text" name="search" id="searchInput" placeholder="Search products..." autocomplete="off"
-                   style="border:none;outline:none;background:transparent;border-bottom:1px solid currentColor;color:inherit;font-size:13px;padding:4px 2px;width:140px;">
+        <form id="searchForm" action="/products" method="GET" class="nav-search-form hidden">
+            <input type="text" name="search" id="searchInput" placeholder="Search products..." autocomplete="off" class="nav-search-input">
         </form>
     </div>
-    <a href="/cart" style="position:relative;">🛒
+    <a href="/cart" class="nav-cart-link">🛒
         {% if session.get('cart') and session['cart']|length > 0 %}
             <span class="cart-count">{{ session['cart']|length }}</span>
         {% endif %}
     </a>
     {% if session.get('user_name') %}
         <span class="nav-user">👤 {{ session['user_name'].split()[0] }}</span>
-        <a href="/my-orders" style="font-size:11px;color:#4a6a40;letter-spacing:1px;text-transform:uppercase;">Orders</a>
+        <a href="/my-orders" class="nav-orders-link">Orders</a>
         <a href="/logout" class="nav-logout">Logout</a>
     {% else %}
         <a href="/login">👤</a>
@@ -51,13 +50,15 @@
     </nav>
 
     <!-- FLASH MESSAGES -->
+    {% block flash %}
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
-                <div class="flash-msg {{ category }}" style="margin:0 32px;margin-top:16px;">{{ message }}</div>
+                <div class="flash-msg {{ category }} flash-msg-page">{{ message }}</div>
             {% endfor %}
         {% endif %}
     {% endwith %}
+    {% endblock %}
 
     <!-- PAGE CONTENT -->
     {% block content %}
@@ -70,7 +71,7 @@
                 <h3>Your Glow Awaits!</h3>
                 <p>Subscribe for tips, new arrivals, and exclusive offers.</p>
                 <div class="newsletter-form">
-    <form method="POST" action="/subscribe" style="display:flex;gap:0;">
+    <form method="POST" action="/subscribe" class="newsletter-inline-form">
         <input type="email" name="email" placeholder="Enter your email address">
         <button type="submit">Subscribe</button>
     </form>

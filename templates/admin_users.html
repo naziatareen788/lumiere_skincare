@@ -6,14 +6,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
-<body style="background:#f8fbf5;">
+<body class="admin-body">
 
 <nav class="navbar">
     <div class="nav-logo">Lumière Admin</div>
     <div class="nav-links">
         <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/products">Products</a>
         <a href="/admin/orders">Orders</a>
-        <a href="/admin/users">Users</a>
+        <a href="/admin/users" class="active">Users</a>
         <a href="/">View Website</a>
     </div>
     <div class="nav-icons">
@@ -21,59 +22,63 @@
     </div>
 </nav>
 
-<section style="padding:40px 32px;">
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash-msg {{ category }} flash-msg-page">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 
-    <div style="margin-bottom:32px;">
+<section class="admin-section">
+
+    <div class="admin-header">
         <p class="sec-label">Manage</p>
-        <h1 style="font-family:'Playfair Display',serif;font-size:32px;font-weight:400;color:#1a2418;">Registered Users</h1>
+        <h1 class="admin-title">Registered Users</h1>
     </div>
 
     <!-- SEARCH BAR -->
-    <form method="GET" action="/admin/users" style="margin-bottom:24px;display:flex;gap:12px;">
-        <input type="text" name="search" value="{{ search }}"
-            placeholder="Search by name or email..."
-            style="flex:1;border:0.5px solid #d8e8d0;padding:12px 16px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:#f8fbf5;">
-        <button type="submit" class="btn-dark" style="padding:12px 24px;font-size:12px;letter-spacing:2px;">Search</button>
+    <form method="GET" action="/admin/users" class="admin-search-bar">
+        <input type="text" name="search" value="{{ search }}" placeholder="Search by name or email...">
+        <button type="submit" class="btn-dark admin-btn-sm">Search</button>
         {% if search %}
-        <a href="/admin/users" class="btn-outline" style="padding:12px 24px;font-size:12px;letter-spacing:2px;">Clear</a>
+        <a href="/admin/users" class="btn-outline admin-btn-sm">Clear</a>
         {% endif %}
     </form>
 
     {% if search %}
-    <p style="font-size:13px;color:#888;margin-bottom:16px;">
+    <p class="admin-search-note">
         Search results for: <strong>{{ search }}</strong> — {{ users|length }} found
     </p>
     {% endif %}
 
-        <div style="background:#fff;border:0.5px solid #d8e8d0;overflow:hidden;">
-        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <div class="admin-table-wrap">
+        <table class="admin-table">
             <thead>
-                <tr style="background:#f0f5ee;border-bottom:0.5px solid #d8e8d0;">
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">#</th>
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Full Name</th>
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Email</th>
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Total Orders</th>
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Total Spent</th>
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Action</th>
+                <tr>
+                    <th>#</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Total Orders</th>
+                    <th>Total Spent</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in users %}
-                <tr style="border-bottom:0.5px solid #f0f5ee;">
-                    <td style="padding:14px 20px;color:#888;">{{ user.id }}</td>
-                    <td style="padding:14px 20px;color:#1a2418;font-weight:500;">{{ user.full_name }}</td>
-                    <td style="padding:14px 20px;color:#5a6a58;">{{ user.email }}</td>
-                    <td style="padding:14px 20px;color:#5a6a58;">
+                <tr>
+                    <td class="text-muted">{{ user.id }}</td>
+                    <td class="text-strong">{{ user.full_name }}</td>
+                    <td class="text-secondary">{{ user.email }}</td>
+                    <td class="text-secondary">
                         {{ user.orders|length if user.orders else 0 }}
                     </td>
-                    <td style="padding:14px 20px;color:#2d4a2d;font-weight:500;">
+                    <td class="text-brand">
                         PKR {{ "{:,}".format(user.orders|sum(attribute='total')|int) if user.orders else 0 }}
                     </td>
-                    <td style="padding:14px 20px;">
+                    <td>
                         <form method="POST" action="/admin/delete-user/{{ user.id }}">
-                            <button type="submit"
-                                onclick="return confirm('Are you sure you want to remove this user?')"
-                                class="btn-remove">
+                            <button type="button" class="btn-remove js-delete-user" data-name="{{ user.full_name }}">
                                 Remove
                             </button>
                         </form>
@@ -81,7 +86,7 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="5" style="padding:24px;text-align:center;color:#888;">No users registered yet</td>
+                    <td colspan="6" class="empty-row">No users registered yet</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -89,6 +94,24 @@
     </div>
 
 </section>
+
+<!-- REMOVE USER CONFIRM MODAL -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+        <div class="modal-icon">!</div>
+        <h3 class="modal-title">Remove this user?</h3>
+        <p class="modal-text">
+            This will permanently delete <strong id="deleteModalName"></strong>'s account.
+            This action cannot be undone.
+        </p>
+        <div class="modal-actions">
+            <button type="button" class="btn-outline" id="deleteModalCancel">Cancel</button>
+            <button type="button" class="btn-remove" id="deleteModalConfirm">Remove User</button>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 </body>
 </html>

@@ -37,9 +37,7 @@
     <div class="hero-right">
         <div class="hero-img-placeholder">
             <img src="{{ url_for('static', filename='images/hero-image.jpg') }}"
-                 alt="Lumiere Skincare"
-                 style="width:100%;height:100%;object-fit:cover;"
-                 onerror="this.parentElement.innerHTML='<p style=color:#a8c890;font-family:serif;letter-spacing:2px>✦ Hero Image Here</p>'">
+                 alt="Lumiere Skincare" id="heroImg" class="hero-img-fill">
         </div>
         <div class="hero-badge">
             <span class="badge-icon">✦</span>
@@ -99,7 +97,7 @@
 </section>
 
 
-    <div style="text-align:center; margin-top:32px; padding-bottom:56px;">
+    <div class="text-center mt-32 pb-56">
     <a href="/products" class="btn-dark">🛍 Shop All Products</a>
 </div>
 </section>

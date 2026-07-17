@@ -44,6 +44,7 @@
 
             <form method="POST" action="/add-to-cart">
                 <input type="hidden" name="product_id" value="{{ request.path.split('/')[-1] }}">
+                <input type="hidden" name="quantity" id="qtyInput" value="1">
                 <div class="product-actions">
                     <div class="quantity-selector">
                         <button type="button" onclick="changeQty(-1)">−</button>
@@ -111,14 +112,14 @@
             </div>
             <div class="review-text">"{{ review.review_text }}"</div>
             <div class="review-author">— {{ review.reviewer_name }}</div>
-            <div style="font-size:10px;color:#aaa;margin-top:4px;">
+            <div class="review-date">
                 {{ review.created_at.strftime('%d %B %Y') }}
             </div>
         </div>
         {% endfor %}
     </div>
     {% else %}
-    <div style="padding:32px;text-align:center;color:#888;font-size:13px;">
+    <div class="no-reviews-msg">
         No reviews yet — be the first to review!
     </div>
     {% endif %}
@@ -155,7 +156,7 @@
                <textarea name="review_text" id="review_text" rows="4"
     placeholder="Share your experience with this product..."></textarea>
             </div>
-            <button type="submit" class="btn-dark" style="margin-top:8px;">
+            <button type="submit" class="btn-dark mt-8">
                 Submit Review
             </button>
         </form>

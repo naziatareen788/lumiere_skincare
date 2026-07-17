@@ -48,7 +48,7 @@
                         placeholder="Enter your city name">
                 </div>
 
-                <h3 class="checkout-section-title" style="margin-top:32px;">Payment Method</h3>
+                <h3 class="checkout-section-title mt-32">Payment Method</h3>
 
                 <div class="payment-options">
                     <label class="payment-option active" id="cod-option" onclick="selectPayment('cod')">
@@ -75,7 +75,7 @@
                 </div>
 
                 <!-- ONLINE TRANSFER DETAILS -->
-                 <div class="online-transfer-box" id="onlineTransferBox" style="display:none;">
+                 <div class="online-transfer-box hidden" id="onlineTransferBox">
                     <div class="transfer-header">
                         <span class="transfer-icon">🏦</span>
                         <h4>Bank Transfer Details</h4>
@@ -121,8 +121,7 @@
                     </div>
                 </div>
 
-                <button type="button" onclick="validateCheckout()" class="btn-dark"
-                    style="width:100%;padding:16px;margin-top:24px;font-size:13px;letter-spacing:2px;">
+                <button type="button" onclick="validateCheckout()" class="btn-dark checkout-submit-btn">
                     Place Order ✓
                 </button>
 
