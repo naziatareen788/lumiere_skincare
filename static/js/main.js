@@ -1,3 +1,11 @@
+// ===== HERO IMAGE FALLBACK =====
+var heroImg = document.getElementById('heroImg');
+if (heroImg) {
+    heroImg.addEventListener('error', function() {
+        heroImg.parentElement.innerHTML = '<p class="hero-img-fallback">✦ Hero Image Here</p>';
+    });
+}
+
 // ===== SPLASH SCREEN =====
 window.addEventListener('load', function() {
     setTimeout(function() {
@@ -87,10 +95,12 @@ function changeImage(imgName, thumbEl) {
 // ===== PRODUCT DETAIL — QUANTITY =====
 function changeQty(change) {
     const qtyEl = document.getElementById('qty');
+    const qtyInput = document.getElementById('qtyInput');
     if (qtyEl) {
         let qty = parseInt(qtyEl.textContent) + change;
         if (qty < 1) qty = 1;
         qtyEl.textContent = qty;
+        if (qtyInput) qtyInput.value = qty;
     }
 }
 
@@ -180,8 +190,9 @@ filterCheckboxes.forEach(function(checkbox) {
 // ===== AUTO FILTER ON PAGE LOAD =====
 window.addEventListener('DOMContentLoaded', function() {
 
-    var catParam = typeof activeCategory !== 'undefined' ? activeCategory : 'all';
-    var skinParam = typeof activeSkinType !== 'undefined' ? activeSkinType : 'all';
+    var productsPage = document.getElementById('productsPage');
+    var catParam = productsPage ? productsPage.dataset.category : 'all';
+    var skinParam = productsPage ? productsPage.dataset.skinType : 'all';
 
     var titleEl = document.getElementById('pageTitle');
     if (titleEl) {
@@ -234,8 +245,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
 // ===== SEARCH FILTER — SHOP PAGE =====
 window.addEventListener('load', function () {
-    var searchVal = typeof searchQuery !== 'undefined' ? searchQuery : '';
-    var searchDisplay = typeof searchQueryDisplay !== 'undefined' ? searchQueryDisplay : '';
+    var productsPage = document.getElementById('productsPage');
+    var searchDisplay = productsPage ? productsPage.dataset.search : '';
+    var searchVal = searchDisplay ? searchDisplay.toLowerCase() : '';
 
     if (!searchVal) return;
 
@@ -386,38 +398,28 @@ if (concernCheckboxes.length > 0) {
 }
 
 // ===== NEWSLETTER SUBSCRIBE =====
-const subscribeBtn = document.querySelector('.newsletter-form button');
+const newsletterForm = document.querySelector('.newsletter-form form');
 const subscribeInput = document.querySelector('.newsletter-form input');
 
-if (subscribeBtn && subscribeInput) {
-    subscribeBtn.addEventListener('click', function() {
+if (newsletterForm && subscribeInput) {
+    newsletterForm.addEventListener('submit', function(e) {
         const email = subscribeInput.value.trim();
 
         if (email === '') {
+            e.preventDefault();
             showAlert(subscribeInput, 'Please enter your email address!', 'error');
-            return;
-        }
-
-        if (!isValidEmail(email)) {
+        } else if (!isValidEmail(email)) {
+            e.preventDefault();
             showAlert(subscribeInput, 'Please enter a valid email address!', 'error');
-            return;
         }
-
-        subscribeInput.value = '';
-        subscribeBtn.textContent = '✓ Subscribed!';
-        subscribeBtn.style.background = '#4a6a40';
-        setTimeout(function() {
-            subscribeBtn.textContent = 'Subscribe';
-            subscribeBtn.style.background = '#a8c890';
-        }, 3000);
     });
 }
 
 // ===== CONTACT FORM =====
-const contactBtn = document.querySelector('.contact-form-box .btn-dark');
-if (contactBtn) {
-    contactBtn.addEventListener('click', function() {
-        const fields = document.querySelectorAll('.contact-form-box input, .contact-form-box textarea');
+const contactForm = document.querySelector('.contact-form-box form');
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        const fields = contactForm.querySelectorAll('input, textarea');
         let valid = true;
 
         fields.forEach(function(field) {
@@ -432,14 +434,8 @@ if (contactBtn) {
             }
         });
 
-        if (valid) {
-            fields.forEach(function(field) { field.value = ''; });
-            contactBtn.textContent = '✓ Message Sent!';
-            contactBtn.style.background = '#4a6a40';
-            setTimeout(function() {
-                contactBtn.textContent = 'Send Message';
-                contactBtn.style.background = '#2d4a2d';
-            }, 3000);
+        if (!valid) {
+            e.preventDefault();
         }
     });
 }
@@ -501,8 +497,6 @@ function clearAlert(field) {
 const loginForm = document.querySelector('form[action="/login"]');
 if (loginForm) {
     loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
         const email = loginForm.querySelector('input[name="email"]');
         const password = loginForm.querySelector('input[name="password"]');
         let valid = true;
@@ -522,6 +516,9 @@ if (loginForm) {
             valid = false;
         }
 
+        if (!valid) {
+            e.preventDefault();
+        }
     });
 }
 
@@ -529,8 +526,6 @@ if (loginForm) {
 const registerForm = document.querySelector('form[action="/register"]');
 if (registerForm) {
     registerForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
         const fullName = registerForm.querySelector('input[name="full_name"]');
         const email = registerForm.querySelector('input[name="email"]');
         const password = registerForm.querySelector('input[name="password"]');
@@ -560,6 +555,10 @@ if (registerForm) {
             showFieldError(confirmPassword, 'Passwords do not match!');
             valid = false;
         }
+
+        if (!valid) {
+            e.preventDefault();
+        }
     });
 }
 
@@ -571,3 +570,42 @@ function showFieldError(field, message) {
     field.parentElement.appendChild(alert);
     field.style.borderColor = '#c0392b';
 } 
+
+// ===== ADMIN DELETE CONFIRM MODALS =====
+function initDeleteModal(triggerSelector, overlayId, nameElId, confirmBtnId, cancelBtnId) {
+    var overlay = document.getElementById(overlayId);
+    if (!overlay) return;
+
+    var nameEl = document.getElementById(nameElId);
+    var confirmBtn = document.getElementById(confirmBtnId);
+    var cancelBtn = document.getElementById(cancelBtnId);
+    var pendingForm = null;
+
+    function closeModal() {
+        overlay.classList.remove('active');
+        pendingForm = null;
+    }
+
+    document.querySelectorAll(triggerSelector).forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            pendingForm = btn.closest('form');
+            nameEl.textContent = btn.dataset.name;
+            overlay.classList.add('active');
+        });
+    });
+
+    confirmBtn.addEventListener('click', function() {
+        if (pendingForm) pendingForm.submit();
+    });
+
+    cancelBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+    });
+}
+
+initDeleteModal('.js-delete-user', 'deleteModal', 'deleteModalName', 'deleteModalConfirm', 'deleteModalCancel');
+initDeleteModal('.js-delete-product', 'deleteProductModal', 'deleteProductModalName', 'deleteProductModalConfirm', 'deleteProductModalCancel');

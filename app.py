@@ -142,6 +142,49 @@ def save_product_image(slug, image_file):
     return filename
 
 
+# ===== SKIN QUIZ RECOMMENDATION RULES =====
+
+SKIN_TYPE_ROUTINE = {
+    'Oily': {
+        'cleanser': 'mochi-cleanser',
+        'toner': 'swimming-pool-toner',
+        'moisturizer': 'oat-gel-cream',
+        'sunscreen': 'relief-sun',
+    },
+    'Dry': {
+        'cleanser': 'hyaluronic-cleanser',
+        'toner': 'milky-toner',
+        'moisturizer': 'ceramide-cream',
+        'sunscreen': 'spf50-sunscreen',
+    },
+    'Sensitive': {
+        'cleanser': 'black-rice-cleanser',
+        'toner': 'heartleaf-toner',
+        'moisturizer': 'bamboo-cream',
+        'sunscreen': 'centella-sunscreen',
+    },
+    'Combination': {
+        'cleanser': 'lowph-cleanser',
+        'toner': 'black-rice-toner',
+        'moisturizer': 'centella-cream',
+        'sunscreen': 'ultralight-sunscreen',
+    },
+}
+
+CONCERN_SERUM_MAP = {
+    'Large Pore': 'niacinamide-serum',
+    'Blackheads': 'niacinamide-serum',
+    'Excess Oil': 'niacinamide-serum',
+    'Wrinkles': 'retinal-shot',
+    'Acne': 'azelaic-serum',
+    'Rosacea': 'azelaic-serum',
+    'Hyperpigmentation': 'vitaminc-serum',
+    'Dark Spots': 'vitaminc-serum',
+    'Hydration': 'snail-serum',
+}
+
+
+
 
 
 if __name__ == '__main__':
