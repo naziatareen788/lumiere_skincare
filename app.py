@@ -83,6 +83,64 @@ class Product(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+# ===== HELPERS =====
+
+def admin_required(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        if not session.get('is_admin'):
+            flash('Please login to access the admin panel.', 'error')
+            return redirect(url_for('admin_login'))
+        return view(*args, **kwargs)
+    return wrapped
+
+
+def get_cart_items():
+    cart = session.get('cart', {})
+    items = []
+    total = 0
+    for product_id, quantity in cart.items():
+        product = Product.query.get(product_id)
+        if not product:
+            continue
+        item_total = product.price * quantity
+        items.append({
+            'id': product_id,
+            'name': product.name,
+            'image': product.image,
+            'price': 'PKR {:,}'.format(product.price),
+            'quantity': quantity,
+            'total': item_total,
+        })
+        total += item_total
+    return items, total
+
+
+def slugify(text):
+    slug = re.sub(r'[^a-z0-9]+', '-', text.strip().lower()).strip('-')
+    return slug or 'product'
+
+
+def unique_slug(name):
+    base = slugify(name)
+    slug = base
+    suffix = 2
+    while Product.query.get(slug):
+        slug = '{}-{}'.format(base, suffix)
+        suffix += 1
+    return slug
+
+
+def allowed_image(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
+
+
+def save_product_image(slug, image_file):
+    ext = image_file.filename.rsplit('.', 1)[1].lower()
+    filename = secure_filename('{}.{}'.format(slug, ext))
+    image_file.save(os.path.join(app.static_folder, 'images', filename))
+    return filename
+
 
 
 
