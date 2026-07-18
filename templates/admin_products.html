@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Products — Lumière</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+<nav class="navbar">
+    <div class="nav-logo">Lumière Admin</div>
+    <div class="nav-links">
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/products" class="active">Products</a>
+        <a href="/admin/orders">Orders</a>
+        <a href="/admin/users">Users</a>
+        <a href="/">View Website</a>
+    </div>
+    <div class="nav-icons">
+        <a href="/admin/logout" class="nav-logout">Logout</a>
+    </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash-msg {{ category }} flash-msg-page">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<section class="admin-section">
+
+    <div class="admin-actions-row">
+        <div>
+            <p class="sec-label">Manage</p>
+            <h1 class="admin-title">Products</h1>
+        </div>
+        <a href="/admin/products/add" class="btn-dark">Add New Product</a>
+    </div>
+
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Skin Type</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>
+                        <img class="admin-thumb" src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+                    </td>
+                    <td class="text-strong">{{ product.name }}</td>
+                    <td class="text-secondary">{{ product.category }}</td>
+                    <td class="text-secondary">{{ product.skin_type }}</td>
+                    <td class="text-brand">PKR {{ "{:,}".format(product.price) }}</td>
+                    <td>
+                        <div class="admin-inline-form">
+                            <a href="/admin/products/edit/{{ product.slug }}" class="btn-outline admin-btn-sm">Edit</a>
+                            <form method="POST" action="/admin/products/delete/{{ product.slug }}">
+                                <button type="button" class="btn-remove admin-btn-sm js-delete-product" data-name="{{ product.name }}">Remove</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="empty-row">No products yet — add your first product.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+<!-- REMOVE PRODUCT CONFIRM MODAL -->
+<div class="modal-overlay" id="deleteProductModal">
+    <div class="modal-box">
+        <div class="modal-icon">!</div>
+        <h3 class="modal-title">Remove this product?</h3>
+        <p class="modal-text">
+            This will permanently delete <strong id="deleteProductModalName"></strong> and its reviews.
+            This action cannot be undone.
+        </p>
+        <div class="modal-actions">
+            <button type="button" class="btn-outline" id="deleteProductModalCancel">Cancel</button>
+            <button type="button" class="btn-remove" id="deleteProductModalConfirm">Remove Product</button>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>

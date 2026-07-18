@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'Edit Product' if product else 'Add Product' }} — Lumière</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+<nav class="navbar">
+    <div class="nav-logo">Lumière Admin</div>
+    <div class="nav-links">
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/products" class="active">Products</a>
+        <a href="/admin/orders">Orders</a>
+        <a href="/admin/users">Users</a>
+        <a href="/">View Website</a>
+    </div>
+    <div class="nav-icons">
+        <a href="/admin/logout" class="nav-logout">Logout</a>
+    </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash-msg {{ category }} flash-msg-page">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<section class="admin-section">
+
+    <div class="admin-header">
+        <p class="sec-label">{{ 'Manage' if product else 'Create' }}</p>
+        <h1 class="admin-title">{{ 'Edit ' + product.name if product else 'Add New Product' }}</h1>
+    </div>
+
+    <div class="admin-form-box">
+        <form method="POST" action="{{ '/admin/products/edit/' + product.slug if product else '/admin/products/add' }}" enctype="multipart/form-data">
+
+            <div class="contact-field">
+                <label>Product Name *</label>
+                <input type="text" name="name" value="{{ product.name if product else '' }}" placeholder="e.g. Green Tea Toner" required>
+            </div>
+
+            <div class="admin-form-row">
+                <div class="contact-field">
+                    <label>Price (PKR) *</label>
+                    <input type="number" name="price" min="0" value="{{ product.price if product else '' }}" placeholder="e.g. 2800" required>
+                </div>
+
+                <div class="contact-field">
+                    <label>Category *</label>
+                    <select name="category" required>
+                        <option value="" disabled {{ 'selected' if not product }}>Select category</option>
+                        {% for c in categories %}
+                        <option value="{{ c }}" {{ 'selected' if product and product.category == c }}>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="contact-field">
+                <label>Skin Type *</label>
+                <select name="skin_type" required>
+                    <option value="" disabled {{ 'selected' if not product }}>Select skin type</option>
+                    {% for s in skin_types %}
+                    <option value="{{ s }}" {{ 'selected' if product and product.skin_type == s }}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="contact-field">
+                <label>Benefits * <span class="text-muted">(one per line)</span></label>
+                <textarea name="benefits" rows="4" placeholder="Deeply hydrates the skin&#10;Calms redness and irritation">{{ product.benefits if product else '' }}</textarea>
+            </div>
+
+            <div class="contact-field">
+                <label>Ingredients *</label>
+                <textarea name="ingredients" rows="3" placeholder="Water, Glycerin, Centella Asiatica Extract...">{{ product.ingredients if product else '' }}</textarea>
+            </div>
+
+            <div class="contact-field">
+                <label>How to Use *</label>
+                <textarea name="how_to_use" rows="3" placeholder="Apply to clean skin morning and night...">{{ product.how_to_use if product else '' }}</textarea>
+            </div>
+
+            <div class="contact-field">
+                <label>Product Image {{ '' if product else '*' }}</label>
+                {% if product %}
+                <img class="admin-current-image" src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+                <p class="text-muted mb-16">Leave empty to keep the current image.</p>
+                {% endif %}
+                <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp,.gif" {{ 'required' if not product }}>
+            </div>
+
+            <div class="btn-row left mt-24">
+                <button type="submit" class="btn-dark">{{ 'Save Changes' if product else 'Add Product' }}</button>
+                <a href="/admin/products" class="btn-outline">Cancel</a>
+            </div>
+
+        </form>
+    </div>
+
+</section>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>
