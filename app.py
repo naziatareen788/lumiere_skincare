@@ -184,6 +184,118 @@ CONCERN_SERUM_MAP = {
 }
 
 
+# ===== STATIC / INFO PAGES =====
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
+
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        full_name = request.form.get('full_name', '').strip()
+        email = request.form.get('email', '').strip()
+        message = request.form.get('message', '').strip()
+
+        if not full_name or not email or not message:
+            flash('Please fill in all required fields.', 'error')
+        else:
+            flash('Thank you for reaching out! We will get back to you within 24 hours.', 'success')
+        return redirect(url_for('contact'))
+
+    return render_template('contact.html')
+
+
+@app.route('/subscribe', methods=['POST'])
+def subscribe():
+    email = request.form.get('email', '').strip()
+    if not email:
+        flash('Please enter your email address.', 'error')
+    else:
+        flash('Thanks for subscribing to Lumière!', 'success')
+    return redirect(request.referrer or url_for('home'))
+
+
+# ===== AUTH =====
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        full_name = request.form.get('full_name', '').strip()
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
+        confirm_password = request.form.get('confirm_password', '')
+
+        if not full_name or not email or not password:
+            flash('Please fill in all fields.', 'error')
+            return redirect(url_for('register'))
+
+        if password != confirm_password:
+            flash('Passwords do not match.', 'error')
+            return redirect(url_for('register'))
+
+        if len(password) < 6:
+            flash('Password must be at least 6 characters.', 'error')
+            return redirect(url_for('register'))
+
+        if User.query.filter_by(email=email).first():
+            flash('An account with this email already exists.', 'error')
+            return redirect(url_for('register'))
+
+        user = User(full_name=full_name, email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+
+        session['user_id'] = user.id
+        session['user_name'] = user.full_name
+        session['user_email'] = user.email
+        flash('Account created successfully! Welcome to Lumière.', 'success')
+        return redirect(url_for('home'))
+
+    return render_template('register.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
+
+        user = User.query.filter_by(email=email).first()
+        if not user or not user.check_password(password):
+            flash('Invalid email or password.', 'error')
+            return redirect(url_for('login'))
+
+        session['user_id'] = user.id
+        session['user_name'] = user.full_name
+        session['user_email'] = user.email
+        flash('Welcome back, {}!'.format(user.full_name.split()[0]), 'success')
+        return redirect(url_for('home'))
+
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    cart = session.get('cart')
+    session.clear()
+    if cart:
+        session['cart'] = cart
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('home'))
+
 
 
 
