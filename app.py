@@ -297,6 +297,74 @@ def logout():
     return redirect(url_for('home'))
 
 
+# ===== PRODUCTS =====
+
+@app.route('/products')
+def products():
+    category = request.args.get('category', 'all')
+    skin_type = request.args.get('skin_type', 'all')
+    search = request.args.get('search', '')
+    all_products = Product.query.order_by(Product.name).all()
+    return render_template(
+        'products.html', category=category, skin_type=skin_type,
+        search=search, products=all_products,
+    )
+
+
+@app.route('/category/<name>')
+def category(name):
+    all_products = Product.query.order_by(Product.name).all()
+    return render_template(
+        'products.html', category=name, skin_type='all',
+        search='', products=all_products,
+    )
+
+
+@app.route('/product/<slug>')
+def product_detail(slug):
+    product = Product.query.get(slug)
+    if not product:
+        abort(404)
+
+    display_product = {
+        'name': product.name,
+        'price': 'PKR {:,}'.format(product.price),
+        'category': product.category,
+        'skin_type': product.skin_type,
+        'images': [product.image],
+        'benefits': product.benefits.split('\n'),
+        'ingredients': product.ingredients,
+        'how_to_use': product.how_to_use,
+    }
+
+    reviews = Review.query.filter_by(product_id=slug).order_by(Review.created_at.desc()).all()
+    return render_template('product_detail.html', product=display_product, reviews=reviews)
+
+
+@app.route('/submit-review', methods=['POST'])
+def submit_review():
+    product_id = request.form.get('product_id')
+    reviewer_name = request.form.get('reviewer_name', '').strip()
+    rating = request.form.get('rating', '5')
+    review_text = request.form.get('review_text', '').strip()
+
+    if not Product.query.get(product_id) or not reviewer_name or not review_text:
+        flash('Please fill in all review fields.', 'error')
+        return redirect(url_for('product_detail', slug=product_id))
+
+    review = Review(
+        product_id=product_id,
+        user_id=session.get('user_id'),
+        reviewer_name=reviewer_name,
+        rating=int(rating),
+        review_text=review_text,
+    )
+    db.session.add(review)
+    db.session.commit()
+    flash('Thank you for your review!', 'success')
+    return redirect(url_for('product_detail', slug=product_id))
+
+
 
 
 if __name__ == '__main__':
