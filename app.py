@@ -365,6 +365,126 @@ def submit_review():
     return redirect(url_for('product_detail', slug=product_id))
 
 
+# ===== CART =====
+
+@app.route('/cart')
+def cart():
+    cart_items, total = get_cart_items()
+    return render_template('cart.html', cart_items=cart_items, total=total)
+
+
+@app.route('/add-to-cart', methods=['POST'])
+def add_to_cart():
+    product_id = request.form.get('product_id')
+    quantity = int(request.form.get('quantity', 1) or 1)
+
+    product = Product.query.get(product_id)
+    if not product:
+        abort(404)
+    if quantity < 1:
+        quantity = 1
+
+    cart = session.get('cart', {})
+    cart[product_id] = cart.get(product_id, 0) + quantity
+    session['cart'] = cart
+
+    flash('{} added to your cart.'.format(product.name), 'success')
+    return redirect(request.referrer or url_for('products'))
+
+
+@app.route('/update-cart', methods=['POST'])
+def update_cart():
+    product_id = request.form.get('product_id')
+    quantity = int(request.form.get('quantity', 1) or 1)
+
+    cart = session.get('cart', {})
+    if quantity <= 0:
+        cart.pop(product_id, None)
+    else:
+        cart[product_id] = quantity
+    session['cart'] = cart
+
+    return redirect(url_for('cart'))
+
+
+@app.route('/remove-from-cart/<product_id>')
+def remove_from_cart(product_id):
+    cart = session.get('cart', {})
+    cart.pop(product_id, None)
+    session['cart'] = cart
+    flash('Item removed from cart.', 'success')
+    return redirect(url_for('cart'))
+
+
+# ===== CHECKOUT / ORDERS =====
+
+@app.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+    if 'user_id' not in session:
+        flash('Please login to place an order.', 'error')
+        return redirect(url_for('login'))
+
+    cart_items, total = get_cart_items()
+
+    if not cart_items:
+        flash('Your cart is empty.', 'error')
+        return redirect(url_for('cart'))
+
+    shipping = 0 if total >= 5000 else 200
+    grand_total = total + shipping
+
+    if request.method == 'POST':
+        full_name = request.form.get('full_name', '').strip()
+        email = request.form.get('email', '').strip()
+        phone = request.form.get('phone', '').strip()
+        address = request.form.get('address', '').strip()
+        city = request.form.get('city', '').strip()
+        payment = request.form.get('payment', 'cod')
+
+        if not all([full_name, email, phone, address, city]):
+            flash('Please fill in all delivery details.', 'error')
+            return redirect(url_for('checkout'))
+
+        order = Order(
+            user_id=session.get('user_id'),
+            full_name=full_name,
+            email=email,
+            phone=phone,
+            address=address,
+            city=city,
+            payment_method=payment,
+            items=json.dumps(cart_items),
+            total=grand_total,
+            status='Pending',
+        )
+        db.session.add(order)
+        db.session.commit()
+
+        session['cart'] = {}
+        return redirect(url_for('order_confirmation', order_id=order.id))
+
+    return render_template(
+        'checkout.html', cart_items=cart_items, total=total,
+        shipping=shipping, grand_total=grand_total,
+    )
+
+
+@app.route('/order-confirmation/<int:order_id>')
+def order_confirmation(order_id):
+    order = Order.query.get_or_404(order_id)
+    return render_template('order_confirmation.html', order=order)
+
+
+@app.route('/my-orders')
+def my_orders():
+    if 'user_id' not in session:
+        flash('Please login to view your orders.', 'error')
+        return redirect(url_for('login'))
+
+    orders = Order.query.filter_by(user_id=session['user_id']).order_by(Order.created_at.desc()).all()
+    return render_template('my_orders.html', orders=orders)
+
+
 
 
 if __name__ == '__main__':
