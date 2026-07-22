@@ -485,6 +485,198 @@ def my_orders():
     return render_template('my_orders.html', orders=orders)
 
 
+# ===== SKIN QUIZ =====
+
+@app.route('/quiz')
+def quiz():
+    return render_template('quiz.html')
+
+
+@app.route('/quiz-result', methods=['POST'])
+def quiz_result():
+    user_name = request.form.get('user_name', '').strip() or 'there'
+    skin_type = request.form.get('skin_type', 'Combination')
+    concerns = request.form.getlist('concerns')
+
+    base = SKIN_TYPE_ROUTINE.get(skin_type, SKIN_TYPE_ROUTINE['Combination'])
+
+    routine_ids = [base['cleanser'], base['toner']]
+
+    for concern in concerns:
+        serum_id = CONCERN_SERUM_MAP.get(concern)
+        if serum_id and serum_id not in routine_ids:
+            routine_ids.append(serum_id)
+
+    routine_ids.append(base['moisturizer'])
+    routine_ids.append(base['sunscreen'])
+
+    routine_products = [p for p in (Product.query.get(pid) for pid in routine_ids) if p]
+
+    routine = []
+    for step, product in enumerate(routine_products, start=1):
+        routine.append({
+            'step': step,
+            'type': product.category,
+            'id': product.slug,
+            'name': product.name,
+            'image': product.image,
+        })
+
+    return render_template(
+        'quiz_result.html', user_name=user_name, skin_type=skin_type,
+        concerns=concerns, routine=routine,
+    )
+
+
+# ===== ADMIN =====
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
+
+        if email == ADMIN_EMAIL and check_password_hash(ADMIN_PASSWORD_HASH, password):
+            session['is_admin'] = True
+            flash('Welcome back, Admin.', 'success')
+            return redirect(url_for('admin_dashboard'))
+
+        flash('Invalid admin credentials.', 'error')
+        return redirect(url_for('admin_login'))
+
+    return render_template('admin_login.html')
+
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('is_admin', None)
+    flash('Admin logged out.', 'success')
+    return redirect(url_for('admin_login'))
+
+
+@app.route('/admin/dashboard')
+@admin_required
+def admin_dashboard():
+    total_orders = Order.query.count()
+    pending_orders = Order.query.filter_by(status='Pending').count()
+    total_users = User.query.count()
+    total_revenue = db.session.query(db.func.coalesce(db.func.sum(Order.total), 0)).scalar()
+    recent_orders = Order.query.order_by(Order.created_at.desc()).limit(5).all()
+
+    return render_template(
+        'admin_dashboard.html', total_orders=total_orders, pending_orders=pending_orders,
+        total_users=total_users, total_revenue=total_revenue, recent_orders=recent_orders,
+    )
+
+
+@app.route('/admin/orders')
+@admin_required
+def admin_orders():
+    orders = Order.query.order_by(Order.created_at.desc()).all()
+    return render_template('admin_orders.html', orders=orders)
+
+
+@app.route('/admin/update-order-status', methods=['POST'])
+@admin_required
+def admin_update_order_status():
+    order_id = request.form.get('order_id')
+    status = request.form.get('status')
+
+    order = Order.query.get_or_404(order_id)
+    order.status = status
+    db.session.commit()
+
+    flash('Order status updated.', 'success')
+    return redirect(url_for('admin_orders'))
+
+
+@app.route('/admin/users')
+@admin_required
+def admin_users():
+    search = request.args.get('search', '').strip()
+
+    query = User.query
+    if search:
+        like = '%{}%'.format(search)
+        query = query.filter(db.or_(User.full_name.ilike(like), User.email.ilike(like)))
+
+    users = query.order_by(User.created_at.desc()).all()
+    return render_template('admin_users.html', users=users, search=search)
+
+
+@app.route('/admin/delete-user/<int:user_id>', methods=['POST'])
+@admin_required
+def admin_delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+
+    Order.query.filter_by(user_id=user_id).update({'user_id': None})
+    db.session.delete(user)
+    db.session.commit()
+
+    flash('User removed.', 'success')
+    return redirect(url_for('admin_users'))
+
+
+@app.route('/admin/products')
+@admin_required
+def admin_products():
+    all_products = Product.query.order_by(Product.name).all()
+    return render_template('admin_products.html', products=all_products)
+
+
+@app.route('/admin/products/add', methods=['GET', 'POST'])
+@admin_required
+def admin_add_product():
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        price = request.form.get('price', '').strip()
+        category = request.form.get('category', '').strip()
+        skin_type = request.form.get('skin_type', '').strip()
+        benefits = request.form.get('benefits', '').strip()
+        ingredients = request.form.get('ingredients', '').strip()
+        how_to_use = request.form.get('how_to_use', '').strip()
+        image_file = request.files.get('image')
+
+        if not all([name, price, category, skin_type, benefits, ingredients, how_to_use]):
+            flash('Please fill in all fields.', 'error')
+            return redirect(url_for('admin_add_product'))
+
+        if not image_file or image_file.filename == '' or not allowed_image(image_file.filename):
+            flash('Please choose a valid product image (png, jpg, jpeg, webp or gif).', 'error')
+            return redirect(url_for('admin_add_product'))
+
+        try:
+            price = int(price)
+        except ValueError:
+            flash('Price must be a whole number.', 'error')
+            return redirect(url_for('admin_add_product'))
+
+        slug = unique_slug(name)
+        image_filename = save_product_image(slug, image_file)
+
+        product = Product(
+            slug=slug,
+            name=name,
+            price=price,
+            category=category,
+            skin_type=skin_type,
+            image=image_filename,
+            benefits=benefits,
+            ingredients=ingredients,
+            how_to_use=how_to_use,
+        )
+        db.session.add(product)
+        db.session.commit()
+
+        flash('Product added successfully.', 'success')
+        return redirect(url_for('admin_products'))
+
+    return render_template(
+        'admin_product_form.html', product=None,
+        categories=PRODUCT_CATEGORIES, skin_types=PRODUCT_SKIN_TYPES,
+    )
+
+
 
 
 if __name__ == '__main__':
