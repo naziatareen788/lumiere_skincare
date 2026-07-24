@@ -127,6 +127,7 @@
     <!-- WRITE REVIEW -->
     <div class="write-review">
         <h3 class="write-review-title">Write a Review</h3>
+        {% if session.get('user_id') %}
         <form method="POST" action="/submit-review">
             <input type="hidden" name="product_id"
                 value="{{ request.path.split('/')[-1] }}">
@@ -160,6 +161,11 @@
                 Submit Review
             </button>
         </form>
+        {% else %}
+        <p class="text-muted">
+            <a href="/login">Login</a> to write a review.
+        </p>
+        {% endif %}
     </div>
 </section>
 

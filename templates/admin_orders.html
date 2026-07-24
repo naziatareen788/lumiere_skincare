@@ -6,13 +6,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
-<body style="background:#f8fbf5;">
+<body class="admin-body">
 
 <nav class="navbar">
     <div class="nav-logo">Lumière Admin</div>
     <div class="nav-links">
         <a href="/admin/dashboard">Dashboard</a>
-        <a href="/admin/orders">Orders</a>
+        <a href="/admin/products">Products</a>
+        <a href="/admin/orders" class="active">Orders</a>
         <a href="/admin/users">Users</a>
         <a href="/">View Website</a>
     </div>
@@ -24,64 +25,64 @@
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         {% for category, message in messages %}
-            <div class="flash-msg {{ category }}" style="margin:16px 32px;">{{ message }}</div>
+            <div class="flash-msg {{ category }} flash-msg-page">{{ message }}</div>
         {% endfor %}
     {% endif %}
 {% endwith %}
 
-<section style="padding:40px 32px;">
+<section class="admin-section">
 
-    <div style="margin-bottom:32px;">
+    <div class="admin-header">
         <p class="sec-label">Manage</p>
-        <h1 style="font-family:'Playfair Display',serif;font-size:32px;font-weight:400;color:#1a2418;">All Orders</h1>
+        <h1 class="admin-title">All Orders</h1>
     </div>
 
-    <div style="background:#fff;border:0.5px solid #d8e8d0;overflow:hidden;">
-        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <div class="admin-table-wrap">
+        <table class="admin-table">
             <thead>
-                <tr style="background:#f0f5ee;border-bottom:0.5px solid #d8e8d0;">
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Order #</th>
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Customer</th>
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Phone</th>
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">City</th>
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Total</th>
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Status</th>
-                    <th style="padding:14px 20px;text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#4a6a40;">Update</th>
+                <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>City</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Update</th>
                 </tr>
             </thead>
             <tbody>
                 {% for order in orders %}
-                <tr style="border-bottom:0.5px solid #f0f5ee;">
-                    <td style="padding:14px 20px;color:#2d4a2d;font-weight:500;">#LUM-{{ '%04d' % order.id }}</td>
-                    <td style="padding:14px 20px;">
-                        <div style="color:#1a2418;font-weight:500;">{{ order.full_name }}</div>
-                        <div style="color:#888;font-size:11px;">{{ order.email }}</div>
+                <tr>
+                    <td class="text-brand">#LUM-{{ '%04d' % order.id }}</td>
+                    <td>
+                        <div class="text-strong">{{ order.full_name }}</div>
+                        <div class="text-muted">{{ order.email }}</div>
                     </td>
-                    <td style="padding:14px 20px;color:#5a6a58;">{{ order.phone }}</td>
-                    <td style="padding:14px 20px;color:#5a6a58;">{{ order.city }}</td>
-                    <td style="padding:14px 20px;color:#1a2418;font-weight:500;">PKR {{ "{:,}".format(order.total|int) }}</td>
-                    <td style="padding:14px 20px;">
+                    <td class="text-secondary">{{ order.phone }}</td>
+                    <td class="text-secondary">{{ order.city }}</td>
+                    <td class="text-strong">PKR {{ "{:,}".format(order.total|int) }}</td>
+                    <td>
                         <span class="status-badge status-{{ order.status | lower | replace(' ', '-') }}">
                             {{ order.status }}
                         </span>
                     </td>
-                    <td style="padding:14px 20px;">
-                        <form method="POST" action="/admin/update-order-status" style="display:flex;gap:8px;align-items:center;">
+                    <td>
+                        <form method="POST" action="/admin/update-order-status" class="admin-inline-form">
                             <input type="hidden" name="order_id" value="{{ order.id }}">
-                            <select name="status" style="border:0.5px solid #d8e8d0;padding:6px 10px;font-size:12px;font-family:'DM Sans',sans-serif;color:#1a2418;background:#f8fbf5;outline:none;">
+                            <select name="status" class="admin-status-select">
                                 <option {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
                                 <option {% if order.status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
                                 <option {% if order.status == 'Packed' %}selected{% endif %}>Packed</option>
                                 <option {% if order.status == 'Out for Delivery' %}selected{% endif %}>Out for Delivery</option>
                                 <option {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
                             </select>
-                            <button type="submit" class="btn-dark" style="padding:6px 14px;font-size:11px;letter-spacing:1px;">Update</button>
+                            <button type="submit" class="btn-dark admin-btn-sm">Update</button>
                         </form>
                     </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="7" style="padding:24px;text-align:center;color:#888;">No orders yet</td>
+                    <td colspan="7" class="empty-row">No orders yet</td>
                 </tr>
                 {% endfor %}
             </tbody>
