@@ -22,15 +22,15 @@ function toggleSearch(e) {
     e.preventDefault();
     var form = document.getElementById('searchForm');
     var input = document.getElementById('searchInput');
-    var isHidden = (form.style.display === 'none' || form.style.display === '');
+    var isHidden = form.classList.contains('hidden');
 
     if (isHidden) {
-        form.style.display = 'inline-flex';
+        form.classList.remove('hidden');
         input.focus();
     } else if (input.value.trim() !== '') {
         form.submit();
     } else {
-        form.style.display = 'none';
+        form.classList.add('hidden');
     }
 }
 
@@ -279,7 +279,7 @@ window.addEventListener('load', function () {
     if (visibleCount === 0) {
         var grid = document.querySelector('.products-grid-full');
         if (grid) {
-            grid.innerHTML = '<p style="padding:40px;text-align:center;color:#888;">No products found matching "' + searchDisplay + '". Try a different keyword.</p>';
+            grid.innerHTML = '<p class="search-empty">No products found matching "' + searchDisplay + '". Try a different keyword.</p>';
         }
     }
 });
@@ -288,7 +288,7 @@ window.addEventListener('load', function () {
 function selectPayment(type) {
     document.getElementById('cod-option').classList.remove('active');
     document.getElementById('online-option').classList.remove('active');
-    document.getElementById('onlineTransferBox').style.display = 'none';
+    document.getElementById('onlineTransferBox').classList.add('hidden');
 
     if (type === 'cod') {
         document.getElementById('cod-option').classList.add('active');
@@ -296,7 +296,7 @@ function selectPayment(type) {
     } else {
         document.getElementById('online-option').classList.add('active');
         document.querySelector('input[value="online"]').checked = true;
-        document.getElementById('onlineTransferBox').style.display = 'block';
+        document.getElementById('onlineTransferBox').classList.remove('hidden');
     }
 }
 
@@ -569,7 +569,7 @@ function showFieldError(field, message) {
     alert.textContent = message;
     field.parentElement.appendChild(alert);
     field.style.borderColor = '#c0392b';
-} 
+}
 
 // ===== ADMIN DELETE CONFIRM MODALS =====
 function initDeleteModal(triggerSelector, overlayId, nameElId, confirmBtnId, cancelBtnId) {
