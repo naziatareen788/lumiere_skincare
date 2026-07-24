@@ -77,7 +77,7 @@ class Product(db.Model):
     category = db.Column(db.String(50), nullable=False)
     skin_type = db.Column(db.String(50), nullable=False)
     image = db.Column(db.String(200), nullable=False)
-    benefits = db.Column(db.Text, nullable=False)  # newline-separated bullet points
+    benefits = db.Column(db.Text, nullable=False)  
     ingredients = db.Column(db.Text, nullable=False)
     how_to_use = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -344,6 +344,11 @@ def product_detail(slug):
 @app.route('/submit-review', methods=['POST'])
 def submit_review():
     product_id = request.form.get('product_id')
+
+    if 'user_id' not in session:
+        flash('Please login to write a review.', 'error')
+        return redirect(url_for('login'))
+
     reviewer_name = request.form.get('reviewer_name', '').strip()
     rating = request.form.get('rating', '5')
     review_text = request.form.get('review_text', '').strip()
@@ -677,6 +682,66 @@ def admin_add_product():
     )
 
 
+@app.route('/admin/products/edit/<slug>', methods=['GET', 'POST'])
+@admin_required
+def admin_edit_product(slug):
+    product = Product.query.get_or_404(slug)
+
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        price = request.form.get('price', '').strip()
+        category = request.form.get('category', '').strip()
+        skin_type = request.form.get('skin_type', '').strip()
+        benefits = request.form.get('benefits', '').strip()
+        ingredients = request.form.get('ingredients', '').strip()
+        how_to_use = request.form.get('how_to_use', '').strip()
+        image_file = request.files.get('image')
+
+        if not all([name, price, category, skin_type, benefits, ingredients, how_to_use]):
+            flash('Please fill in all fields.', 'error')
+            return redirect(url_for('admin_edit_product', slug=slug))
+
+        try:
+            price = int(price)
+        except ValueError:
+            flash('Price must be a whole number.', 'error')
+            return redirect(url_for('admin_edit_product', slug=slug))
+
+        if image_file and image_file.filename:
+            if not allowed_image(image_file.filename):
+                flash('Please choose a valid product image (png, jpg, jpeg, webp or gif).', 'error')
+                return redirect(url_for('admin_edit_product', slug=slug))
+            product.image = save_product_image(slug, image_file)
+
+        product.name = name
+        product.price = price
+        product.category = category
+        product.skin_type = skin_type
+        product.benefits = benefits
+        product.ingredients = ingredients
+        product.how_to_use = how_to_use
+        db.session.commit()
+
+        flash('Product updated successfully.', 'success')
+        return redirect(url_for('admin_products'))
+
+    return render_template(
+        'admin_product_form.html', product=product,
+        categories=PRODUCT_CATEGORIES, skin_types=PRODUCT_SKIN_TYPES,
+    )
+
+
+@app.route('/admin/products/delete/<slug>', methods=['POST'])
+@admin_required
+def admin_delete_product(slug):
+    product = Product.query.get_or_404(slug)
+
+    Review.query.filter_by(product_id=slug).delete()
+    db.session.delete(product)
+    db.session.commit()
+
+    flash('Product removed.', 'success')
+    return redirect(url_for('admin_products'))
 
 
 if __name__ == '__main__':
