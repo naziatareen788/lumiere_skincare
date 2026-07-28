@@ -77,7 +77,7 @@ class Product(db.Model):
     category = db.Column(db.String(50), nullable=False)
     skin_type = db.Column(db.String(50), nullable=False)
     image = db.Column(db.String(200), nullable=False)
-    benefits = db.Column(db.Text, nullable=False)  
+    benefits = db.Column(db.Text, nullable=False)  # newline-separated bullet points
     ingredients = db.Column(db.Text, nullable=False)
     how_to_use = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -393,8 +393,17 @@ def add_to_cart():
     cart[product_id] = cart.get(product_id, 0) + quantity
     session['cart'] = cart
 
-    flash('{} added to your cart.'.format(product.name), 'success')
-    return redirect(request.referrer or url_for('products'))
+    message = '{} added to your cart.'.format(product.name)
+
+    if request.form.get('ajax') == '1':
+        return {'success': True, 'message': message, 'cart_count': len(cart)}
+
+    flash(message, 'success')
+
+    referrer = request.referrer or ''
+    if '/quiz-result' in referrer:
+        return redirect(url_for('cart'))
+    return redirect(referrer or url_for('products'))
 
 
 @app.route('/update-cart', methods=['POST'])

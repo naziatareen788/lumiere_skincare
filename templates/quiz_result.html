@@ -28,8 +28,9 @@
                      alt="{{ item['name'] }}">
             </div>
             <div class="routine-name">{{ item['name'] }}</div>
-            <form method="POST" action="/add-to-cart">
+            <form method="POST" action="/add-to-cart" class="js-ajax-cart">
                 <input type="hidden" name="product_id" value="{{ item['id'] }}">
+                <input type="hidden" name="ajax" value="1">
                 <button type="submit" class="add-cart">Add to Cart</button>
             </form>
         </div>

@@ -440,38 +440,6 @@ if (contactForm) {
     });
 }
 
-// ===== REVIEW FORM =====
-// const reviewBtn = document.querySelector('.write-review .btn-dark');
-// if (reviewBtn) {
-   // reviewBtn.addEventListener('click', function() {
-     //   const nameField = document.querySelector('.write-review input[type="text"]');
-//        const reviewField = document.querySelector('.write-review textarea');
-//        let valid = true;
-//
-//        if (nameField && nameField.value.trim() === '') {
-//            showAlert(nameField, 'Please enter your name!', 'error');
-//            valid = false;
-//        } else if (nameField) {
-//            clearAlert(nameField);
-//        }
-//        if (reviewField && reviewField.value.trim() === '') {
-//            showAlert(reviewField, 'Please write your review!', 'error');
-//            valid = false;
-//        } else if (reviewField) {
-//            clearAlert(reviewField);
-//        }
-//        if (valid) {
-//            if (nameField) nameField.value = '';
-//            if (reviewField) reviewField.value = '';
-//            reviewBtn.textContent = '✓ Review Submitted!';
-//            reviewBtn.style.background = '#4a6a40';
-//            setTimeout(function() {
-//                reviewBtn.textContent = 'Submit Review';
-//                reviewBtn.style.background = '#2d4a2d';
-//            }, 3000);
-//        }
-//    });
-//}
 
 // ===== HELPER FUNCTIONS =====
 function isValidEmail(email) {
@@ -609,3 +577,53 @@ function initDeleteModal(triggerSelector, overlayId, nameElId, confirmBtnId, can
 
 initDeleteModal('.js-delete-user', 'deleteModal', 'deleteModalName', 'deleteModalConfirm', 'deleteModalCancel');
 initDeleteModal('.js-delete-product', 'deleteProductModal', 'deleteProductModalName', 'deleteProductModalConfirm', 'deleteProductModalCancel');
+
+// ===== ADD TO CART WITHOUT LEAVING THE PAGE (QUIZ RESULT) =====
+function showCartToast(message) {
+    var existing = document.querySelector('.cart-toast');
+    if (existing) existing.remove();
+
+    var toast = document.createElement('div');
+    toast.className = 'cart-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    void toast.offsetWidth; // force layout so the transition below actually animates
+    toast.classList.add('show');
+
+    setTimeout(function() {
+        toast.classList.remove('show');
+        setTimeout(function() { toast.remove(); }, 300);
+    }, 2500);
+}
+
+function updateCartCount(count) {
+    var badge = document.querySelector('.cart-count');
+    if (badge) {
+        badge.textContent = count;
+    } else if (count > 0) {
+        var cartLink = document.querySelector('.nav-cart-link');
+        if (cartLink) {
+            var span = document.createElement('span');
+            span.className = 'cart-count';
+            span.textContent = count;
+            cartLink.appendChild(span);
+        }
+    }
+}
+
+document.querySelectorAll('.js-ajax-cart').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData(form);
+
+        fetch(form.action, { method: 'POST', body: formData })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    showCartToast(data.message);
+                    updateCartCount(data.cart_count);
+                }
+            });
+    });
+});
