@@ -719,16 +719,6 @@ a {
     color: #888;
 }
 
-.sort-select {
-    background: transparent;
-    border: 0.5px solid #d8e8d0;
-    padding: 8px 14px;
-    font-size: 12px;
-    color: #4a6a40;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-}
-
 /* ===== PRODUCTS GRID FULL ===== */
 .products-grid-full {
     display: grid;
@@ -1894,9 +1884,10 @@ a {
 }
 
 .routine-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
 }
 
 .routine-card {
@@ -1904,29 +1895,31 @@ a {
     border: 0.5px solid #d8e8d0;
     overflow: hidden;
     text-align: center;
+    width: 100%;
+    max-width: 480px;
 }
 
 .routine-step {
     background: #2d4a2d;
     color: #e8f0e0;
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    padding: 8px;
+    padding: 10px;
 }
 
 .routine-type {
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: #4a6a40;
-    padding: 10px 10px 0;
+    padding: 12px 12px 0;
 }
 
 .routine-img {
-    height: 160px;
+    height: 210px;
     overflow: hidden;
-    padding: 10px;
+    padding: 14px;
 }
 
 .routine-img img {
@@ -1937,9 +1930,9 @@ a {
 
 .routine-name {
     font-family: 'Playfair Display', serif;
-    font-size: 14px;
+    font-size: 17px;
     color: #1a2418;
-    padding: 10px;
+    padding: 12px;
     line-height: 1.4;
 }
 
@@ -2346,4 +2339,29 @@ a {
 .newsletter-inline-form {
     display: flex;
     gap: 0;
+}
+
+/* ===== ADD-TO-CART TOAST ===== */
+.cart-toast {
+    position: fixed;
+    top: 110px;
+    left: 50%;
+    background: #e8a020;
+    color: #1a2418;
+    padding: 14px 26px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    transform: translateX(-50%) translateY(-14px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 2000;
+    max-width: 320px;
+    text-align: center;
+}
+
+.cart-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }

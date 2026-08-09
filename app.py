@@ -506,39 +506,54 @@ def quiz():
     return render_template('quiz.html')
 
 
-@app.route('/quiz-result', methods=['POST'])
+@app.route('/quiz-result', methods=['GET', 'POST'])
 def quiz_result():
-    user_name = request.form.get('user_name', '').strip() or 'there'
-    skin_type = request.form.get('skin_type', 'Combination')
-    concerns = request.form.getlist('concerns')
+    if request.method == 'POST':
+        user_name = request.form.get('user_name', '').strip() or 'there'
+        skin_type = request.form.get('skin_type', 'Combination')
+        concerns = request.form.getlist('concerns')
 
-    base = SKIN_TYPE_ROUTINE.get(skin_type, SKIN_TYPE_ROUTINE['Combination'])
+        base = SKIN_TYPE_ROUTINE.get(skin_type, SKIN_TYPE_ROUTINE['Combination'])
 
-    routine_ids = [base['cleanser'], base['toner']]
+        routine_ids = [base['cleanser'], base['toner']]
 
-    for concern in concerns:
-        serum_id = CONCERN_SERUM_MAP.get(concern)
-        if serum_id and serum_id not in routine_ids:
-            routine_ids.append(serum_id)
+        for concern in concerns:
+            serum_id = CONCERN_SERUM_MAP.get(concern)
+            if serum_id and serum_id not in routine_ids:
+                routine_ids.append(serum_id)
 
-    routine_ids.append(base['moisturizer'])
-    routine_ids.append(base['sunscreen'])
+        routine_ids.append(base['moisturizer'])
+        routine_ids.append(base['sunscreen'])
 
-    routine_products = [p for p in (Product.query.get(pid) for pid in routine_ids) if p]
+        routine_products = [p for p in (Product.query.get(pid) for pid in routine_ids) if p]
 
-    routine = []
-    for step, product in enumerate(routine_products, start=1):
-        routine.append({
-            'step': step,
-            'type': product.category,
-            'id': product.slug,
-            'name': product.name,
-            'image': product.image,
-        })
+        routine = []
+        for step, product in enumerate(routine_products, start=1):
+            routine.append({
+                'step': step,
+                'type': product.category,
+                'id': product.slug,
+                'name': product.name,
+                'image': product.image,
+            })
+
+
+        session['quiz_result'] = {
+            'user_name': user_name,
+            'skin_type': skin_type,
+            'concerns': concerns,
+            'routine': routine,
+        }
+        return redirect(url_for('quiz_result'))
+
+    result = session.get('quiz_result')
+    if not result:
+        flash('Please take the quiz first.', 'error')
+        return redirect(url_for('quiz'))
 
     return render_template(
-        'quiz_result.html', user_name=user_name, skin_type=skin_type,
-        concerns=concerns, routine=routine,
+        'quiz_result.html', user_name=result['user_name'], skin_type=result['skin_type'],
+        concerns=result['concerns'], routine=result['routine'],
     )
 
 
